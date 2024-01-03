@@ -74,7 +74,7 @@ const queueAction = async function (request, reply) {
     }
 }
 
-module.exports = {
+export default {
     base,
     otpKeys,
     redisData,

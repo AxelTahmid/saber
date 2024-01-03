@@ -1,4 +1,4 @@
-const {
+import {
     verifyCaptcha,
     registration,
     authenticate,
@@ -7,7 +7,7 @@ const {
     verifyOTP,
     updateUserPassword,
     verifyUserEmail
-} = require('./auth.services')
+} from './auth.services.js'
 
 /**
  * * POST /v1/auth/login
@@ -125,7 +125,7 @@ const resetPassword = async function (request, reply) {
     }
 }
 
-module.exports = {
+export default {
     login,
     register,
     me,

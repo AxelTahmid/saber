@@ -1,8 +1,8 @@
-const fp = require('fastify-plugin')
-const knex = require('knex')
-const paginator = require('../utility/knex')
+import fp from 'fastify-plugin'
+import knex from 'knex'
+import paginator from '../utility/knex.js'
 
-const fastifyKnex = async function (fastify, options, next) {
+async function fastifyKnex(fastify, options, next) {
     try {
         if (!fastify.knex) {
             const handler = knex(options)
@@ -24,6 +24,6 @@ const fastifyKnex = async function (fastify, options, next) {
     }
 }
 
-module.exports = fp(fastifyKnex, {
+export default fp(fastifyKnex, {
     name: 'fastify-knex'
 })

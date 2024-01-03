@@ -1,8 +1,6 @@
 {
   "recommendations": [
     "aaron-bond.better-comments",
-    "bmewburn.vscode-intelephense-client",
-    "capaj.vscode-standardjs-snippets",
     "christian-kohler.npm-intellisense",
     "christian-kohler.path-intellisense",
     "dbaeumer.vscode-eslint",

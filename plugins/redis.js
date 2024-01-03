@@ -1,6 +1,7 @@
-const fp = require('fastify-plugin')
-const Redis = require('ioredis')
-const cache = require('../utility/cache')
+import fp from 'fastify-plugin'
+
+import Redis from 'ioredis'
+import CacheUtility from '../utility/cache.js'
 
 async function fastifyRedis(fastify, options) {
     const redis = new Redis(options)
@@ -15,7 +16,7 @@ async function fastifyRedis(fastify, options) {
 
     if (!fastify.redis) fastify.decorate('redis', redis)
 
-    if (!fastify.cache) fastify.decorate('cache', cache(redis))
+    if (!fastify.cache) fastify.decorate('cache', new CacheUtility(redis))
 
     fastify.addHook('onClose', async (instance, done) => {
         instance.redis.quit(done)
@@ -24,6 +25,6 @@ async function fastifyRedis(fastify, options) {
     return redis
 }
 
-module.exports = fp(fastifyRedis, {
+export default fp(fastifyRedis, {
     name: 'fastify-redis'
 })

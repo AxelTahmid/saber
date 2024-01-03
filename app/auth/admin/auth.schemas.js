@@ -1,7 +1,7 @@
-const S = require('fluent-json-schema')
-const { userObject, responseObject } = require('../../../config/schema')
+import { S } from 'fluent-json-schema'
+import { userObject, responseObject } from '../../../config/schema.js'
 
-const adminAuthObj = S.object()
+export const adminAuthObj = S.object()
     .prop(
         'email',
         S.string().minLength(6).maxLength(100).format('email').required()
@@ -12,21 +12,21 @@ const adminAuthObj = S.object()
 /**
  * * POST /v1/auth/login
  */
-const login_s = {
+export const login_s = {
     body: adminAuthObj.without(['role_id']),
     response: { 200: responseObject() }
 }
 /**
  * * POST /v1/auth/register
  */
-const create_s = {
+export const create_s = {
     body: adminAuthObj,
     response: { 201: responseObject() }
 }
 /**
  * * GET /v1/auth/me
  */
-const fetch_s = {
+export const fetch_s = {
     response: {
         200: responseObject(userObject)
     }
@@ -34,12 +34,12 @@ const fetch_s = {
 /**
  * * POST /v1/auth/reset-password
  */
-const update_s = {
+export const update_s = {
     body: adminAuthObj,
     response: { 201: responseObject(S.object().prop('token', S.string())) }
 }
 
-module.exports = {
+export default {
     login_s,
     create_s,
     fetch_s,

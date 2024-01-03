@@ -1,12 +1,12 @@
-const { default: fastifyMultipart } = require('@fastify/multipart')
-const s3object = require('../../plugins/s3object')
-const { storage } = require('../../config/environment')
+import  fastifyMultipart  from ('@fastify/multipart')
+import s3object  from '../../plugins/s3object'
+import { storage } from '../../config/environment'
 
-const galleryHandler = require('./gallery.handlers')
-const gallerySchema = require('./gallery.schema')
-const { s_flush } = require('../../config/schema')
+import galleryHandler from './gallery.handlers'
+import gallerySchema from './gallery.schema'
+import { s_flush } from '../../config/schema'
 
-module.exports = async function (fastify) {
+export default async function (fastify) {
     fastify.register(fastifyMultipart, {
         limits: storage.multer
     })

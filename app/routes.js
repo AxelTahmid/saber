@@ -1,8 +1,8 @@
-const rootRoutes = require('./base/handlers')
-const authPublicRoutes = require('./auth/public/auth.routes')
-const authAdminRoutes = require('./auth/admin/auth.routes')
+import rootRoutes from './base/handlers.js'
+import authPublicRoutes from './auth/public/auth.routes.js'
+import authAdminRoutes from './auth/admin/auth.routes.js'
 
-module.exports = async function (app) {
+export default async app => {
     app.setNotFoundHandler(
         {
             preHandler: app.rateLimit({
@@ -16,13 +16,9 @@ module.exports = async function (app) {
                 .send({ error: true, message: '404 - Route Not Found' })
         }
     )
-    /**
-     * * entrypoint routes
-     */
-    /**
-     * * Service Routes Registration with Prefix
-     */
+
     app.register(rootRoutes)
-        .register(authPublicRoutes, { prefix: '/v1/auth' })
-        .register(authAdminRoutes, { prefix: '/v1/admin/auth' })
+
+    app.register(authPublicRoutes, { prefix: '/v1/auth' })
+    app.register(authAdminRoutes, { prefix: '/v1/admin/auth' })
 }

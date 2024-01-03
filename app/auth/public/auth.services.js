@@ -1,5 +1,5 @@
-const { ofetch } = require('ofetch')
-const { captcha, isDevEnvironment } = require('../../../config/environment')
+import { ofetch } from 'ofetch'
+import conf from '../../../config/environment.js'
 
 /**
  * Verifies a captcha token using the Cloudflare API.
@@ -8,12 +8,12 @@ const { captcha, isDevEnvironment } = require('../../../config/environment')
  * @returns {Promise<boolean>} A Promise that resolves to true if the captcha is valid, or false otherwise.
  * @throws {Error} - Throws an error if the captcha config is not set or if the captcha verification fails.
  */
-const verifyCaptcha = async (app, token) => {
-    if (isDevEnvironment) {
+export const verifyCaptcha = async (app, token) => {
+    if (conf.isDevEnvironment) {
         return true
     }
 
-    if (!captcha?.secret) {
+    if (!conf.captcha?.secret) {
         throw app.httpErrors.badRequest('Captcha failed, config not set!')
     }
 
@@ -43,7 +43,7 @@ const verifyCaptcha = async (app, token) => {
  * @returns {Promise<Object>} A promise that resolves to the user object.
  * @throws {import('http-errors').HttpError} Throws a 404 error if the user is not found.
  */
-const fetchUser = async (app, id) => {
+export const fetchUser = async (app, id) => {
     const user = await app.knex('user_customers').where('id', id).first()
 
     if (!user) throw app.httpErrors.notFound('User not found!')
@@ -61,7 +61,7 @@ const fetchUser = async (app, id) => {
  * @throws {NotFoundError} - If no user with the provided email is found.
  * @throws {ForbiddenError} - If the provided password is incorrect.
  */
-const authenticate = async (app, props) => {
+export const authenticate = async (app, props) => {
     const { email, password } = props || {}
     const key = `timeout:${email}`
     let count = await app.cache.get(key)
@@ -94,7 +94,7 @@ const authenticate = async (app, props) => {
  * @returns {Promise<string>} - A promise that resolves to the user's authentication token.
  * @throws {Error} - If the user already exists.
  */
-const registration = async (app, props) => {
+export const registration = async (app, props) => {
     let { email, password } = props || {}
 
     let user = await app.knex('user_customers').where('email', email).first()
@@ -127,7 +127,7 @@ const registration = async (app, props) => {
  * @returns {Promise<string>} - A Promise that resolves to an string,the generated token.
  * @throws {Error} - If the user is not found.
  */
-const verifyUserEmail = async (app, email) => {
+export const verifyUserEmail = async (app, email) => {
     const isUpdated = await app
         .knex('user_customers')
         .where('email', email)
@@ -154,7 +154,7 @@ const verifyUserEmail = async (app, email) => {
  * @throws {Error} If the user is not found.
  * @returns {Promise<void>} A Promise that resolves when the user's password has been updated.
  */
-const updateUserPassword = async (app, props) => {
+export const updateUserPassword = async (app, props) => {
     const { email, password } = props || {}
 
     const hashedPassword = await app.bcrypt.hash(password)
@@ -176,7 +176,7 @@ const updateUserPassword = async (app, props) => {
  * @throws {NotFoundError} If the user is not found.
  * @returns {Promise<string>} The generated OTP code.
  */
-const getOTP = async (app, email) => {
+export const getOTP = async (app, email) => {
     const user = await app.knex('user_customers').where('email', email).first()
 
     if (!user) throw app.httpErrors.notFound('User not found!')
@@ -206,7 +206,7 @@ const getOTP = async (app, email) => {
  * @param {string} props.code - The OTP code to verify.
  * @returns {Promise<boolean>} - A Promise that resolves to true if the OTP code is valid, false otherwise.
  */
-const verifyOTP = async (app, props) => {
+export const verifyOTP = async (app, props) => {
     const key = `otp:${props.email}`
 
     const otp = await app.redis.get(key)
@@ -218,15 +218,4 @@ const verifyOTP = async (app, props) => {
     } else {
         return false
     }
-}
-
-module.exports = {
-    verifyCaptcha,
-    registration,
-    authenticate,
-    fetchUser,
-    getOTP,
-    verifyOTP,
-    verifyUserEmail,
-    updateUserPassword
 }

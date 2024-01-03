@@ -1,6 +1,6 @@
-require('dotenv').config({ path: '../.env' })
+import 'dotenv/config'
 
-module.exports = {
+export default {
     development: {
         client: 'pg',
         connection: process.env.PG_CONNECTION_STRING,

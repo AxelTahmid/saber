@@ -1,20 +1,24 @@
-const { readFileSync } = require('node:fs')
-const { join } = require('node:path')
+import fp from 'fastify-plugin'
+import fastifyJwt from '@fastify/jwt'
 
-const fp = require('fastify-plugin')
-const { default: fastifyJwt } = require('@fastify/jwt')
-const {
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'url'
+import { join, dirname } from 'node:path'
+
+import {
     authenticated,
     verified,
     admin,
     manager,
     restricted
-} = require('../utility/jwt')
+} from '../utility/jwt.js'
 
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 /**
  * * All JWT features including roles
  */
-const fastJWT = async function (fastify) {
+async function fastJWT(fastify) {
     /**
      * * prime256v1, in short P-256 ECDSA keys for JWT
      */
@@ -57,4 +61,5 @@ const fastJWT = async function (fastify) {
         restricted
     })
 }
-module.exports = fp(fastJWT)
+
+export default fp(fastJWT)

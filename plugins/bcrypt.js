@@ -1,7 +1,7 @@
-const fp = require('fastify-plugin')
-const bcrypt = require('bcryptjs')
+import fp from 'fastify-plugin'
+import * as bcrypt from 'bcryptjs'
 
-const fastifyBcrypt = function (fastify, opts, next) {
+function fastifyBcrypt(fastify, opts, next) {
     const saltWorkFactor = opts.saltWorkFactor || 10
 
     const hash = async pwd => bcrypt.hash(pwd, saltWorkFactor)
@@ -19,4 +19,4 @@ const fastifyBcrypt = function (fastify, opts, next) {
     next()
 }
 
-module.exports = fp(fastifyBcrypt)
+export default fp(fastifyBcrypt)

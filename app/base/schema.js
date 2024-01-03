@@ -1,6 +1,6 @@
-const S = require('fluent-json-schema')
+import { S } from 'fluent-json-schema'
 
-const { responseObject } = require('../../config/schema')
+import { responseObject } from '../../config/schema'
 
 /**
  * * Schema GET /
@@ -43,4 +43,4 @@ const queueAction = {
     }
 }
 
-module.exports = { base, arrayofString, queueAction }
+export default { base, arrayofString, queueAction }

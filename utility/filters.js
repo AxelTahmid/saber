@@ -56,7 +56,7 @@ function structuredTree(data) {
     })
 }
 
-module.exports = {
+export default {
     structuredTree,
     treeFromList,
     treeByParent

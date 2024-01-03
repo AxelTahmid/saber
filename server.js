@@ -1,12 +1,24 @@
-require('dotenv').config()
+import 'dotenv/config'
 
-const Fastify = require('fastify')
-const closeWithGrace = require('close-with-grace')
+import fastify from 'fastify'
+import fastifyHelmet from '@fastify/helmet'
+import fastifyCors from '@fastify/cors'
+import fastifyFormbody from '@fastify/formbody'
+import fastifySensible from '@fastify/sensible'
+import fastifyUnderPressure from '@fastify/under-pressure'
+import fastifyRateLimit from '@fastify/rate-limit'
+import closeWithGrace from 'close-with-grace'
 
-const conf = require('./config/environment')
+import routes from './app/routes.js'
+import conf from './config/environment.js'
+import redis from './plugins/redis.js'
+import jwt from './plugins/jwt.js'
+import bullMQ from './plugins/bullMQ.js'
+import knex from './plugins/knex.js'
+import knexfile from './database/knexfile.js'
 
 //  give array of ip for trustproxy in production
-const app = Fastify({
+const app = fastify({
     trustProxy: true,
     requestTimeout: 120000,
     logger: {
@@ -25,25 +37,23 @@ const app = Fastify({
 if (conf.isDevEnvironment) {
     conf.cors.origin.push(/localhost(:\d{1,5})?/)
 }
-// * Plugins
-app.register(require('@fastify/helmet'), { global: true })
-    .register(require('@fastify/cors'), conf.cors)
-    .register(require('@fastify/formbody'))
-    .register(require('@fastify/sensible'))
-    .register(require('@fastify/under-pressure'), conf.healthcheck)
-    .register(require('./plugins/redis'), conf.redis)
-    .register(require('./plugins/jwt'))
-    .register(require('./plugins/bullMQ'), conf.bullMQ)
-    .register(require('@fastify/rate-limit'), conf.rate_limit)
+
+app.register(fastifyHelmet, { global: true })
+app.register(fastifyCors, conf.cors)
+app.register(fastifyFormbody)
+app.register(fastifySensible)
+app.register(fastifyUnderPressure, conf.healthcheck)
+app.register(fastifyRateLimit, conf.rate_limit)
+app.register(redis, conf.redis)
+app.register(jwt)
+app.register(bullMQ, conf.bullMQ)
 
 /**
  * * Database
  */
-const knex = require('./plugins/knex')
 if (conf.isDevEnvironment) {
     app.log.info('using development database')
-    const { development } = require('./database/knexfile')
-    app.register(knex, development)
+    app.register(knex, knexfile.development)
 } else {
     app.log.info('db: production')
     app.register(knex, conf.sql)
@@ -52,7 +62,7 @@ if (conf.isDevEnvironment) {
 /**
  * * Register the app directory
  */
-app.register(require('./app/routes'))
+app.register(routes)
 
 /**
  * * delay is the number of milliseconds for the graceful close to finish

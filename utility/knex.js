@@ -4,7 +4,7 @@
  * @param {string} props { per_page, current_page, table, query, sort }
  * @returns pagination
  */
-module.exports = knex => async props => {
+export default knex => async props => {
     const pagination = {}
     const per_page = props.per_page || 20
     const sort = props.orderBy || 'desc'

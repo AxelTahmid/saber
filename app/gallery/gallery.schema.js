@@ -1,6 +1,6 @@
-const S = require('fluent-json-schema')
+import { S } from 'fluent-json-schema'
 
-const { responseObject } = require('../../config/schema')
+import { responseObject } from '../../config/schema'
 
 const contentObj = S.object()
     .prop('Key', S.string())
@@ -46,7 +46,7 @@ const s_destroyMany = {
     response: { 201: responseObject() }
 }
 
-module.exports = {
+export default {
     s_gallery,
     s_upload,
     s_destroy,

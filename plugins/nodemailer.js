@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign, max-len */
-const fp = require('fastify-plugin')
-const { createTransport } = require('nodemailer')
+import fp from 'fastify-plugin'
+import { createTransport } from 'nodemailer'
 
 function fastifyMailer(fastify, options, next) {
     const { defaults, namespace, transport } = options
@@ -66,7 +66,7 @@ function fastifyMailer(fastify, options, next) {
     next()
 }
 
-module.exports = fp(fastifyMailer, {
+export default fp(fastifyMailer, {
     fastify: '>=4.0.0',
     name: '@fastify/nodemailer'
 })

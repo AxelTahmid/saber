@@ -1,10 +1,13 @@
-require('dotenv').config({ path: '../.env' })
-const IORedis = require('ioredis')
+import 'dotenv/config'
+import { Redis } from 'ioredis'
 
-module.exports = {
+export default {
     host: process.env.HOST || '0.0.0.0',
     port: process.env.PORT || 3000,
     isDevEnvironment: process.env.NODE_ENV === 'development',
+    captcha: {
+        secret: process.env.TURNSTILE_SECRET_KEY
+    },
     cors: {
         origin: [/https?:\/\/[^/]*\.<domain>\.com(:\d{1,5})?/],
         method: ['GET', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
@@ -92,7 +95,7 @@ module.exports = {
         }
     },
     bullMQ: {
-        redis: new IORedis({
+        redis: new Redis({
             host: process.env.REDIS_URL || '127.0.0.1',
             port: process.env.REDIS_PORT || 6379,
             maxRetriesPerRequest: null
@@ -113,11 +116,8 @@ module.exports = {
         },
         queue: process.env.QUEUE_NAME || 'mail-queue'
     },
-    captcha: {
-        secret: process.env.TURNSTILE_SECRET_KEY
-    },
     rate_limit: {
-        redis: new IORedis({
+        redis: new Redis({
             host: process.env.REDIS_URL,
             port: process.env.REDIS_PORT,
             connectTimeout: 500,

@@ -1,8 +1,10 @@
-const fp = require('fastify-plugin')
-const { Queue, Worker } = require('bullmq')
-const jobProcessor = require('../app/mail/index')
+import fp from 'fastify-plugin'
 
-const fastifyBullMQ = async function (fastify, opts, next) {
+import { Queue, Worker } from 'bullmq'
+
+import jobProcessor from '../app/mail/index.js'
+
+async function fastifyBullMQ(fastify, opts, next) {
     try {
         if (!fastify.queue) {
             const queue = new Queue(opts.queue, {
@@ -64,6 +66,6 @@ const fastifyBullMQ = async function (fastify, opts, next) {
     }
 }
 
-module.exports = fp(fastifyBullMQ, {
+export default fp(fastifyBullMQ, {
     name: 'fastify-bullmq'
 })

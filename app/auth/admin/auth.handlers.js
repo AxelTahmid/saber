@@ -1,14 +1,14 @@
-const {
+import {
     createAdmin,
     fetchAdmin,
     updateAdmin,
     authenticate
-} = require('./auth.services')
+} from './auth.services.js'
 
 /**
  * * POST /v1/admin/auth/login
  */
-const login = async function (request, reply) {
+export const login = async function (request, reply) {
     const token = await authenticate(this, request.body)
 
     reply.code(200)
@@ -22,7 +22,7 @@ const login = async function (request, reply) {
 /**
  * * POST /v1/admin/auth/register
  */
-const create = async function (request, reply) {
+export const create = async function (request, reply) {
     await createAdmin(this, request.body)
 
     reply.code(201)
@@ -35,7 +35,7 @@ const create = async function (request, reply) {
 /**
  * * GET /v1/admin/auth/me
  */
-const fetch = async function (request, reply) {
+export const fetch = async function (request, reply) {
     const data = await fetchAdmin(this, request.user.email)
 
     reply.code(200)
@@ -49,7 +49,7 @@ const fetch = async function (request, reply) {
 /**
  * * POST /v1/admin/auth/
  */
-const update = async function (request, reply) {
+export const update = async function (request, reply) {
     await updateAdmin(this, request.body)
 
     reply.code(201)
@@ -60,4 +60,4 @@ const update = async function (request, reply) {
     }
 }
 
-module.exports = { login, create, update, fetch }
+export default { login, create, update, fetch }

@@ -1,7 +1,7 @@
-const fp = require('fastify-plugin')
-const { S3Client } = require('@aws-sdk/client-s3')
+import fp from 'fastify-plugin'
+import { S3Client } from '@aws-sdk/client-s3'
 
-const s3object = async function (fastify, opts, next) {
+async function s3client(fastify, opts, next) {
     try {
         if (!fastify.s3) {
             const client = new S3Client(opts)
@@ -21,6 +21,6 @@ const s3object = async function (fastify, opts, next) {
     }
 }
 
-module.exports = fp(s3object, {
+export default fp(s3client, {
     name: 'fastify-s3'
 })

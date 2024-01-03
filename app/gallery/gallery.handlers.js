@@ -2,14 +2,14 @@
  * * https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/s3-example-creating-buckets.html
  * * https://github.com/awsdocs/aws-doc-sdk-examples/blob/main/javascriptv3/example_code/s3/README.md
  */
-const {
+import {
     ListObjectsCommand,
     PutObjectCommand,
     DeleteObjectCommand,
     DeleteObjectsCommand
-} = require('@aws-sdk/client-s3')
+} from '@aws-sdk/client-s3'
 
-const { storage } = require('../../config/environment')
+import { storage } from '../../config/environment'
 /**
  * * Handler GET /v1/gallery/flush
  */
@@ -124,4 +124,4 @@ const destroyMany = async function (request, reply) {
     }
 }
 
-module.exports = { flush, gallery, upload, destroy, destroyMany }
+export default { flush, gallery, upload, destroy, destroyMany }

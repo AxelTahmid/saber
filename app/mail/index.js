@@ -1,29 +1,28 @@
-const { createTransport } = require('nodemailer')
+import { createTransport } from 'nodemailer'
+import conf from '../../config/environment.js'
 
-module.exports = function (job) {
+export default function (job) {
     try {
         const { action, payload } = job.data || null
 
-        const {
-            mailer: { defaults, transport }
-        } = require('../../config/environment')
-
         let transporter
-        if (defaults) {
-            transporter = createTransport(transport, defaults)
+        if (conf.mailer.defaults) {
+            transporter = createTransport(
+                conf.mailer.transport,
+                conf.mailer.defaults
+            )
         } else {
-            transporter = createTransport(transport)
+            transporter = createTransport(conf.mailer.transport)
         }
 
         // put your html template here, return as exported js string
-        const t_otp = (otp) => (
+        const t_otp = otp =>
             `
             <div style="text-align: center;">
                 <h1>OTP Code</h1>
                 <p>OTP code is: <strong>${otp}</strong></p>
             </div>
             `
-            )
 
         switch (action) {
             case 'otp':

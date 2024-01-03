@@ -1,9 +1,9 @@
-const bcrypt = require('../../../plugins/bcrypt')
+import bcrypt from '../../../plugins/bcrypt.js'
 
-const { login, fetch, create, update } = require('./auth.handlers')
-const { login_s, fetch_s, create_s, update_s } = require('./auth.schemas')
+import { login, fetch, create, update } from './auth.handlers.js'
+import { login_s, fetch_s, create_s, update_s } from './auth.schemas.js'
 
-module.exports = async function (fastify) {
+export default async function (fastify) {
     fastify.register(bcrypt)
 
     fastify.route({

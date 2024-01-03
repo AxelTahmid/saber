@@ -1,37 +1,31 @@
-const bcrypt = require('../../../plugins/bcrypt')
+import bcrypt from '../../../plugins/bcrypt.js'
 
-const {
-    login,
-    register,
-    me,
-    requestOTP,
-    verifyEmail,
-    resetPassword
-} = require('./auth.handlers')
-const {
+import auth from './auth.handlers.js'
+
+import {
     loginSchema,
     registerSchema,
     meSchema,
     verifyEmailSchema,
     requestOTPSchema,
     resetPasswordSchema
-} = require('./auth.schemas')
+} from './auth.schemas.js'
 
-module.exports = async function (fastify) {
+export default async function (fastify) {
     fastify.register(bcrypt)
 
     fastify.route({
         method: 'POST',
         url: '/register',
         schema: registerSchema,
-        handler: register
+        handler: auth.register
     })
 
     fastify.route({
         method: 'POST',
         url: '/login',
         schema: loginSchema,
-        handler: login
+        handler: auth.login
     })
 
     fastify.route({
@@ -39,14 +33,14 @@ module.exports = async function (fastify) {
         url: '/me',
         onRequest: fastify.authenticate,
         schema: meSchema,
-        handler: me
+        handler: auth.me
     })
 
     fastify.route({
         method: 'POST',
         url: '/otp-code',
         schema: requestOTPSchema,
-        handler: requestOTP
+        handler: auth.requestOTP
     })
 
     fastify.route({
@@ -54,13 +48,13 @@ module.exports = async function (fastify) {
         url: '/verify-email',
         onRequest: fastify.authenticate,
         schema: verifyEmailSchema,
-        handler: verifyEmail
+        handler: auth.verifyEmail
     })
 
     fastify.route({
         method: 'POST',
         url: '/reset-password',
         schema: resetPasswordSchema,
-        handler: resetPassword
+        handler: auth.resetPassword
     })
 }

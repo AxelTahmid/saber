@@ -1,18 +1,12 @@
-const {
-    base,
-    otpKeys,
-    redisData,
-    flushRedis,
-    queueAction
-} = require('./handlers')
-const schema = require('./schema')
+import helper from './handlers'
+import schema from './schema'
 
-module.exports = async function (fastify) {
+export default async function (fastify) {
     fastify.route({
         method: 'GET',
         url: '/',
         schema: schema.base,
-        handler: base
+        handler: helper.base
     })
 
     fastify.route({
@@ -20,14 +14,14 @@ module.exports = async function (fastify) {
         url: '/otp',
         onRequest: fastify.role.restricted,
         schema: schema.arrayofString,
-        handler: otpKeys
+        handler: helper.otpKeys
     })
 
     fastify.route({
         method: 'POST',
         url: '/redis',
         onRequest: fastify.role.restricted,
-        handler: redisData
+        handler: helper.redisData
     })
 
     fastify.route({
@@ -35,13 +29,13 @@ module.exports = async function (fastify) {
         url: '/queue',
         onRequest: fastify.role.restricted,
         schema: schema.queueAction,
-        handler: queueAction
+        handler: helper.queueAction
     })
 
     fastify.route({
         method: 'POST',
         url: '/flush',
         onRequest: fastify.role.restricted,
-        handler: flushRedis
+        handler: helper.flushRedis
     })
 }

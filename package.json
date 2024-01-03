@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"description": "This is a starter template for fastify",
 	"main": "server.js",
-	"type": "commonjs",
+	"type": "module",
 	"engines": {
 		"npm": ">=8.0.0",
 		"node": ">=20.0.0"

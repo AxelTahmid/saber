@@ -1,7 +1,7 @@
 /**
  * * Fetch User by Email
  */
-const fetchAdmin = async (app, email) => {
+export const fetchAdmin = async (app, email) => {
     const user = await app
         .knex('user_admins')
         .where('user_admins.email', email)
@@ -15,7 +15,7 @@ const fetchAdmin = async (app, email) => {
 /**
  * * Authenticate passed user
  */
-const authenticate = async (app, props) => {
+export const authenticate = async (app, props) => {
     const { email, password } = props || {}
     const key = `timeout:${email}`
     let count = await app.cache.get(key)
@@ -40,7 +40,7 @@ const authenticate = async (app, props) => {
 /**
  * * Create User via createAdmin
  */
-const createAdmin = async (app, props) => {
+export const createAdmin = async (app, props) => {
     const { email, password, role_id } = props || {}
 
     const user = await app.knex('user_admins').where('email', email).first()
@@ -58,7 +58,7 @@ const createAdmin = async (app, props) => {
         .returning('id')
 }
 
-const updateAdmin = async (app, props) => {
+export const updateAdmin = async (app, props) => {
     let { email, password, role_id } = props || {}
 
     if (password) {
@@ -75,9 +75,9 @@ const updateAdmin = async (app, props) => {
         throw app.httpErrors.notFound(`User: ${email}, not found!`)
 }
 
-module.exports = {
-    createAdmin,
-    updateAdmin,
+export default {
     fetchAdmin,
-    authenticate
+    authenticate,
+    createAdmin,
+    updateAdmin
 }
