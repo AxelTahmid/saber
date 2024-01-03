@@ -1,0 +1,10 @@
+**/.git
+**/.svn
+**/.hg
+**/node_modules
+.dockerignore
+.kubernetes
+.vscode
+*.md
+*.yml
+package*.json

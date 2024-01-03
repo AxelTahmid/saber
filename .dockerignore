@@ -1,0 +1,16 @@
+.env
+.env.example
+.kubernetes
+.vscode
+.git
+.github
+.gitignore
+.eslintignore
+.eslintrc.json
+.prettierrc.json
+.prettierignore
+.editorconfig
+nodemon.json
+node_modules
+README.md
+database

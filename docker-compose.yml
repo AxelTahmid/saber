@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  app:
+    container_name: 'api'
+    env_file: .env
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:${PORT}"
+    tty: true
+    links:
+      - database
+      - redis
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+  database:
+    image: 'postgres:16-bookworm'
+    container_name: db
+    env_file: '.env'
+    environment:
+      POSTGRES_PASSWORD: ${DB_ROOT_PASS}
+      POSTGRES_DB: "${DB_NAME}"
+      POSTGRES_USER: "${DB_USER}"
+    ports:
+      - 5432:5432
+    expose:
+      - "5432"
+    volumes:
+      - "db_data:/var/lib/postgresql/data"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "${DB_NAME}", "-U", "${DB_USER}"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+
+  redis:
+    image: 'redis:alpine'
+    container_name: 'redis'
+    expose:
+      - "6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 60s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  db_data:

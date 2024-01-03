@@ -1,0 +1,20 @@
+{
+  "recommendations": [
+    "aaron-bond.better-comments",
+    "bmewburn.vscode-intelephense-client",
+    "capaj.vscode-standardjs-snippets",
+    "christian-kohler.npm-intellisense",
+    "christian-kohler.path-intellisense",
+    "dbaeumer.vscode-eslint",
+    "eamodio.gitlens",
+    "esbenp.prettier-vscode",
+    "greven.umbra",
+    "leizongmin.node-module-intellisense",
+    "mgmcdermott.vscode-language-babel",
+    "mikestead.dotenv",
+    "oderwat.indent-rainbow",
+    "PKief.material-icon-theme",
+    "usernamehw.errorlens",
+    "wix.vscode-import-cost",
+  ]
+}

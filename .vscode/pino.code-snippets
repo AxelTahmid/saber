@@ -1,0 +1,17 @@
+{
+	"loginfo":{
+		"prefix": ["ali"],
+		"body": ["app.log.info( { data },'data here: ' )"],
+		"description": ["Shortcut for a pino info logger"]
+		},
+	"logdebug":{
+		"prefix": ["ald"],
+		"body": ["app.log.info( { data },'data here: ' )"],
+		"description": ["Shortcut for a pino info logger"]
+		},
+	"logerror":{
+		"prefix": ["ale"],
+		"body": ["app.log.info( { data },'data here: ' )"],
+		"description": ["Shortcut for a pino info logger"]
+		},
+}

@@ -1,0 +1,67 @@
+{
+    "env": {
+        "es2024": true,
+        "node": true
+    },
+    "extends": [
+        "plugin:import/recommended",
+        "plugin:n/recommended",
+        "standard",
+        "prettier"
+    ],
+    "parserOptions": {
+        "ecmaVersion": "latest"
+    },
+    "rules": {
+        // "newline-per-chained-call": 1,
+        "no-unused-vars": "error",
+        "no-var": "error",
+        "curly": "off",
+        "camelcase": "off",
+        "space-before-function-paren": "off",
+        "indent": "off",
+        "new-cap": "off",
+        "strict": ["error", "global"],
+        "quotes": ["error", "single"],
+        "comma-dangle": ["error", "never"],
+        "complexity": ["warn", 10],
+        "no-param-reassign": [
+            "error",
+            {
+                "props": false
+            }
+        ],
+        "no-use-before-define": [
+            "error",
+            {
+                "functions": false,
+                "variables": false
+            }
+        ],
+        "no-console": [
+            "error",
+            {
+                "allow": ["time", "timeEnd"]
+            }
+        ],
+        "brace-style": [
+            "error",
+            "1tbs",
+            {
+                "allowSingleLine": true
+            }
+        ],
+        "max-len": [
+            "error",
+            {
+                "code": 85,
+                "ignoreComments": true,
+                "ignoreTrailingComments": true,
+                "ignoreUrls": true,
+                "ignoreStrings": true,
+                "ignoreTemplateLiterals": true,
+                "ignorePattern": "^\\s*var\\s.+=\\s*require\\s*\\("
+            }
+        ]
+    }
+}
