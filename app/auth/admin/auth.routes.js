@@ -3,7 +3,7 @@ import bcrypt from '../../../plugins/bcrypt.js'
 import { login, fetch, create, update } from './auth.handlers.js'
 import { login_s, fetch_s, create_s, update_s } from './auth.schemas.js'
 
-export default async function (fastify) {
+export default function adminAuth(fastify) {
     fastify.register(bcrypt)
 
     fastify.route({
@@ -35,4 +35,6 @@ export default async function (fastify) {
         schema: fetch_s,
         handler: fetch
     })
+
+    done()
 }

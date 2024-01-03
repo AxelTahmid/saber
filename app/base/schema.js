@@ -1,11 +1,10 @@
 import { S } from 'fluent-json-schema'
-
-import { responseObject } from '../../config/schema'
+import { responseObject } from '../../config/schema.js'
 
 /**
  * * Schema GET /
  */
-const base = {
+export const base = {
     response: {
         200: S.object()
             .prop('label', S.string())
@@ -25,7 +24,7 @@ const base = {
 /**
  * * Schema GET /otp
  */
-const arrayofString = {
+export const arrayofString = {
     response: {
         200: responseObject(S.array().items(S.string()))
     }
@@ -33,7 +32,7 @@ const arrayofString = {
 /**
  * * Schema POST /queue
  */
-const queueAction = {
+export const queueAction = {
     body: S.object().prop(
         'action',
         S.enum(['drain', 'clean', 'obliterate']).required()

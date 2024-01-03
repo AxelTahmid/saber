@@ -25,5 +25,5 @@ async function fastifyKnex(fastify, options, next) {
 }
 
 export default fp(fastifyKnex, {
-    name: 'fastify-knex'
+    name: 'knex'
 })

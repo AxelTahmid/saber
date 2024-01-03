@@ -62,4 +62,6 @@ async function fastJWT(fastify) {
     })
 }
 
-export default fp(fastJWT)
+export default fp(fastJWT, {
+    name: 'fast-jwt'
+})

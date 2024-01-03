@@ -1,8 +1,8 @@
-import rootRoutes from './base/handlers.js'
+import rootRoutes from './base/routes.js'
 import authPublicRoutes from './auth/public/auth.routes.js'
 import authAdminRoutes from './auth/admin/auth.routes.js'
 
-export default async app => {
+export default function routes(app) {
     app.setNotFoundHandler(
         {
             preHandler: app.rateLimit({

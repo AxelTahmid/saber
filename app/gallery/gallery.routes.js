@@ -6,7 +6,7 @@ import galleryHandler from './gallery.handlers'
 import gallerySchema from './gallery.schema'
 import { s_flush } from '../../config/schema'
 
-export default async function (fastify) {
+export default function gallery(fastify) {
     fastify.register(fastifyMultipart, {
         limits: storage.multer
     })

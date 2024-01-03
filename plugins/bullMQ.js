@@ -67,5 +67,5 @@ async function fastifyBullMQ(fastify, opts, next) {
 }
 
 export default fp(fastifyBullMQ, {
-    name: 'fastify-bullmq'
+    name: 'bullmq'
 })

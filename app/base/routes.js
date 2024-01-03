@@ -1,7 +1,7 @@
-import helper from './handlers'
-import schema from './schema'
+import helper from './handlers.js'
+import schema from './schema.js'
 
-export default async function (fastify) {
+export default function base(fastify, done) {
     fastify.route({
         method: 'GET',
         url: '/',
@@ -38,4 +38,6 @@ export default async function (fastify) {
         onRequest: fastify.role.restricted,
         handler: helper.flushRedis
     })
+
+    done()
 }

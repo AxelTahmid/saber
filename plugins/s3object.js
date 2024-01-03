@@ -22,5 +22,5 @@ async function s3client(fastify, opts, next) {
 }
 
 export default fp(s3client, {
-    name: 'fastify-s3'
+    name: 's3-client'
 })

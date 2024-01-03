@@ -1,7 +1,7 @@
 import fp from 'fastify-plugin'
 import * as bcrypt from 'bcryptjs'
 
-function fastifyBcrypt(fastify, opts, next) {
+function fastifyBcrypt(fastify, opts, done) {
     const saltWorkFactor = opts.saltWorkFactor || 10
 
     const hash = async pwd => bcrypt.hash(pwd, saltWorkFactor)
@@ -16,7 +16,9 @@ function fastifyBcrypt(fastify, opts, next) {
         .decorateRequest('bcryptHash', hash)
         .decorateRequest('bcryptCompare', compare)
 
-    next()
+    done()
 }
 
-export default fp(fastifyBcrypt)
+export default fp(fastifyBcrypt, {
+    name: 'bcrypt'
+})

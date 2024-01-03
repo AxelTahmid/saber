@@ -1,7 +1,7 @@
 import { createTransport } from 'nodemailer'
 import conf from '../../config/environment.js'
 
-export default function (job) {
+export default function mail(job) {
     try {
         const { action, payload } = job.data || null
 

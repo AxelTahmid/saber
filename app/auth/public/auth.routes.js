@@ -11,7 +11,7 @@ import {
     resetPasswordSchema
 } from './auth.schemas.js'
 
-export default async function (fastify) {
+export default function publicAuth(fastify, done) {
     fastify.register(bcrypt)
 
     fastify.route({
@@ -57,4 +57,6 @@ export default async function (fastify) {
         schema: resetPasswordSchema,
         handler: auth.resetPassword
     })
+
+    done()
 }

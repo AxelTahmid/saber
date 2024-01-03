@@ -38,31 +38,32 @@ if (conf.isDevEnvironment) {
     conf.cors.origin.push(/localhost(:\d{1,5})?/)
 }
 
-app.register(fastifyHelmet, { global: true })
-app.register(fastifyCors, conf.cors)
-app.register(fastifyFormbody)
-app.register(fastifySensible)
-app.register(fastifyUnderPressure, conf.healthcheck)
-app.register(fastifyRateLimit, conf.rate_limit)
-app.register(redis, conf.redis)
-app.register(jwt)
-app.register(bullMQ, conf.bullMQ)
+await app
+    .register(fastifyHelmet, { global: true })
+    .register(fastifyCors, conf.cors)
+    .register(fastifyFormbody)
+    .register(fastifySensible)
+    .register(fastifyUnderPressure, conf.healthcheck)
+    .register(fastifyRateLimit, conf.rate_limit)
+    .register(redis, conf.redis)
+    .register(jwt)
+    .register(bullMQ, conf.bullMQ)
 
 /**
  * * Database
  */
 if (conf.isDevEnvironment) {
     app.log.info('using development database')
-    app.register(knex, knexfile.development)
+    await app.register(knex, knexfile.development)
 } else {
     app.log.info('db: production')
-    app.register(knex, conf.sql)
+    await app.register(knex, conf.sql)
 }
 
 /**
  * * Register the app directory
  */
-app.register(routes)
+await app.register(routes)
 
 /**
  * * delay is the number of milliseconds for the graceful close to finish

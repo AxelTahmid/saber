@@ -26,5 +26,5 @@ async function fastifyRedis(fastify, options) {
 }
 
 export default fp(fastifyRedis, {
-    name: 'fastify-redis'
+    name: 'redis'
 })
