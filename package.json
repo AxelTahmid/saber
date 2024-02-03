@@ -8,13 +8,14 @@
 		"npm": ">=8.0.0",
 		"node": ">=20.0.0"
 	},
+	"packageManager": "yarn@4.1.0",
 	"scripts": {
 		"start": "node server.js",
 		"dev": "nodemon server.js",
 		"refresh": "bash ./database/database.sh",
 		"migrate": "knex migrate:latest --knexfile=./database/knexfile.js --verbose",
 		"seed": "knex seed:run --knexfile=./database/knexfile.js --verbose",
-		"rollback": "knex migrate:rollback --knexfile=./database/knexfile --all --verbose",
+		"rollback": "knex migrate:rollback --knexfile=./database/knexfile --verbose",
 		"make:seeder": "knex seed:make --knexfile=./database/knexfile.js",
 		"make:migration": "knex migrate:make --knexfile=./database/knexfile.js",
 		"key": "cd certs/ && bash generate.sh",
@@ -56,9 +57,7 @@
 		"eslint-plugin-import": "^2.29.1",
 		"eslint-plugin-n": "^16.6.1",
 		"nodemon": "^3.0.2",
-		"npm-check": "^6.0.1",
 		"pino-pretty": "^10.3.1",
 		"prettier": "^3.1.1"
-	},
-	"packageManager": "yarn@4.0.2"
+	}
 }
