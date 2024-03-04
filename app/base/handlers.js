@@ -3,23 +3,21 @@ const base = async function (request, reply) {
 
     reply.code(200)
     return {
-        label: 'Welcome to API',
+        label: "Welcome to API",
         uptime: process.uptime(),
         version: process.version,
-        status
+        status,
     }
 }
 
 const otpKeys = async function (request, reply) {
-    const data = await this.cache.get_pattern('otp*')
+    const data = await this.cache.get_pattern("otp*")
 
     reply.code(200)
     return {
         error: false,
-        message: data.length
-            ? 'All OTP in circulation'
-            : 'No OTP in ciruclation',
-        data
+        message: data.length ? "All OTP in circulation" : "No OTP in ciruclation",
+        data,
     }
 }
 
@@ -32,17 +30,17 @@ const redisData = async function (request, reply) {
     return {
         error: false,
         message: `Data for Redis ${key}`,
-        data
+        data,
     }
 }
 
 const flushRedis = async function (request, reply) {
-    await this.cache.flush_pattern('*')
+    await this.cache.flush_pattern("*")
 
     reply.code(200)
     return {
         error: false,
-        message: 'Redis globally flushed'
+        message: "Redis globally flushed",
     }
 }
 
@@ -50,19 +48,19 @@ const queueAction = async function (request, reply) {
     const action = request.body?.action
 
     switch (action) {
-        case 'drain':
+        case "drain":
             await this.queue.drain()
             break
 
-        case 'clean':
+        case "clean":
             await this.queue.clean(
                 60000, // 1 minute
                 1000, // max number of jobs to clean
-                'paused'
+                "paused",
             )
             break
 
-        case 'obliterate':
+        case "obliterate":
             await this.queue.obliterate()
             break
     }
@@ -70,7 +68,7 @@ const queueAction = async function (request, reply) {
     reply.code(200)
     return {
         error: false,
-        message: `BullMQ Action - ${action} performed successfully`
+        message: `BullMQ Action - ${action} performed successfully`,
     }
 }
 
@@ -79,5 +77,5 @@ export default {
     otpKeys,
     redisData,
     flushRedis,
-    queueAction
+    queueAction,
 }

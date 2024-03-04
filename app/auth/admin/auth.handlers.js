@@ -1,9 +1,4 @@
-import {
-    createAdmin,
-    fetchAdmin,
-    updateAdmin,
-    authenticate
-} from './auth.services.js'
+import { authenticate, createAdmin, fetchAdmin, updateAdmin } from "./auth.services.js"
 
 /**
  * * POST /v1/admin/auth/login
@@ -14,8 +9,8 @@ export const login = async function (request, reply) {
     reply.code(200)
     return {
         error: false,
-        message: 'Login Sucessful',
-        data: { token }
+        message: "Login Sucessful",
+        data: { token },
     }
 }
 
@@ -28,7 +23,7 @@ export const create = async function (request, reply) {
     reply.code(201)
     return {
         error: false,
-        message: 'Registration Sucessful'
+        message: "Registration Sucessful",
     }
 }
 
@@ -41,8 +36,8 @@ export const fetch = async function (request, reply) {
     reply.code(200)
     return {
         error: false,
-        message: 'User Fetched!',
-        data
+        message: "User Fetched!",
+        data,
     }
 }
 
@@ -56,7 +51,7 @@ export const update = async function (request, reply) {
 
     return {
         error: false,
-        message: 'User Updated'
+        message: "User Updated",
     }
 }
 

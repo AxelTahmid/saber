@@ -24,7 +24,7 @@ export const authenticated = async (request, reply) => {
  */
 export const admin = async (request, reply) => {
     await request.jwtVerify()
-    if (request.user.role !== 'admin') {
+    if (request.user.role !== "admin") {
         reply.code(401)
         throw Error(`${request.user.email} does not have permission`)
     }
@@ -34,7 +34,7 @@ export const admin = async (request, reply) => {
  */
 export const manager = async (request, reply) => {
     await request.jwtVerify()
-    if (request.user.role !== 'manager') {
+    if (request.user.role !== "manager") {
         reply.code(401)
         throw Error(`${request.user.email} does not have permission`)
     }
@@ -45,7 +45,7 @@ export const manager = async (request, reply) => {
  */
 export const restricted = async (request, reply) => {
     await request.jwtVerify()
-    const roles = ['admin', 'manager']
+    const roles = ["admin", "manager"]
     const allowed = roles.includes(request.user.role)
     if (!allowed) {
         reply.code(401)

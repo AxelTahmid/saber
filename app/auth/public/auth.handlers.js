@@ -1,13 +1,13 @@
 import {
-    verifyCaptcha,
-    registration,
     authenticate,
     fetchUser,
     getOTP,
-    verifyOTP,
+    registration,
     updateUserPassword,
-    verifyUserEmail
-} from './auth.services.js'
+    verifyCaptcha,
+    verifyOTP,
+    verifyUserEmail,
+} from "./auth.services.js"
 
 /**
  * * POST /v1/auth/login
@@ -20,8 +20,8 @@ const login = async function (request, reply) {
     reply.code(200)
     return {
         error: false,
-        message: 'Login Sucessful',
-        data: { token }
+        message: "Login Sucessful",
+        data: { token },
     }
 }
 
@@ -36,8 +36,8 @@ const register = async function (request, reply) {
     reply.code(201)
     return {
         error: false,
-        message: 'Registration Sucessful',
-        data: { token }
+        message: "Registration Sucessful",
+        data: { token },
     }
 }
 
@@ -50,8 +50,8 @@ const me = async function (request, reply) {
     reply.code(200)
     return {
         error: false,
-        message: 'User Fetched!',
-        data
+        message: "User Fetched!",
+        data,
     }
 }
 
@@ -69,7 +69,7 @@ const requestOTP = async function (request, reply) {
     reply.code(200)
     return {
         error: false,
-        message: `OTP was sent to: ${email}`
+        message: `OTP was sent to: ${email}`,
     }
 }
 
@@ -88,7 +88,7 @@ const verifyEmail = async function (request, reply) {
     const check = await verifyOTP(this, { code: request.body.code, email })
 
     if (!check) {
-        throw this.httpErrors.badRequest('OTP incorrect or expired')
+        throw this.httpErrors.badRequest("OTP incorrect or expired")
     }
 
     const token = await verifyUserEmail(this, email)
@@ -97,8 +97,8 @@ const verifyEmail = async function (request, reply) {
 
     return {
         error: false,
-        message: 'User Email Verified',
-        data: { token }
+        message: "User Email Verified",
+        data: { token },
     }
 }
 
@@ -113,7 +113,7 @@ const resetPassword = async function (request, reply) {
     const check = await verifyOTP(this, { code, email })
 
     if (!check) {
-        throw this.httpErrors.badRequest('OTP incorrect or expired')
+        throw this.httpErrors.badRequest("OTP incorrect or expired")
     }
     await updateUserPassword(this, { email, password })
 
@@ -121,7 +121,7 @@ const resetPassword = async function (request, reply) {
 
     return {
         error: false,
-        message: 'User Password Changed'
+        message: "User Password Changed",
     }
 }
 
@@ -131,5 +131,5 @@ export default {
     me,
     requestOTP,
     verifyEmail,
-    resetPassword
+    resetPassword,
 }

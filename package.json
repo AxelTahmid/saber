@@ -19,11 +19,10 @@
 		"make:seeder": "knex seed:make --knexfile=./database/knexfile.js",
 		"make:migration": "knex migrate:make --knexfile=./database/knexfile.js",
 		"key": "cd certs/ && bash generate.sh",
-		"format:check": "prettier --check **/*.js .",
-		"format:fix": "prettier --write **/*.js .",
-		"lint:check": "eslint --ext .js .",
-		"lint:fix": "eslint --ext .js . --fix",
-		"update:deps": "yarn upgrade-interactive"
+		"fix": "yarn dlx @biomejs/biome check --apply .",
+		"check": "yarn dlx @biomejs/biome check .",
+		"deps": "yarn upgrade-interactive",
+		"prepare": "husky"
 	},
 	"author": "AxelTahmid",
 	"license": "MIT",
@@ -51,13 +50,10 @@
 		"pg": "^8.11.3"
 	},
 	"devDependencies": {
-		"eslint": "^8.56.0",
-		"eslint-config-prettier": "^9.1.0",
-		"eslint-config-standard": "^17.1.0",
-		"eslint-plugin-import": "^2.29.1",
-		"eslint-plugin-n": "^16.6.1",
-		"nodemon": "^3.0.2",
-		"pino-pretty": "^10.3.1",
-		"prettier": "^3.1.1"
+		"@biomejs/biome": "1.5.3",
+		"husky": "^9.0.11",
+		"lint-staged": "^15.2.2",
+		"nodemon": "^3.1.0",
+		"pino-pretty": "^10.3.1"
 	}
 }

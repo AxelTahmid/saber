@@ -1,15 +1,7 @@
 {
     "delay": "1000",
     "restartable": "rs",
-    "ignore": [
-        ".git",
-        ".github",
-        ".vscode",
-        ".kubernetes",
-        "node_modules/**/node_modules",
-        "database",
-        "Dockerfile"
-    ],
+    "ignore": [".git", ".github", ".vscode", ".kubernetes", "node_modules/**/node_modules", "database", "Dockerfile"],
     "verbose": true,
     "execMap": {
         "js": "node"

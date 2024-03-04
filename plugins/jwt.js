@@ -1,17 +1,11 @@
-import fp from 'fastify-plugin'
-import fastifyJwt from '@fastify/jwt'
+import fastifyJwt from "@fastify/jwt"
+import fp from "fastify-plugin"
 
-import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'url'
-import { join, dirname } from 'node:path'
+import { readFileSync } from "node:fs"
+import { dirname, join } from "node:path"
+import { fileURLToPath } from "url"
 
-import {
-    authenticated,
-    verified,
-    admin,
-    manager,
-    restricted
-} from '../utility/jwt.js'
+import { admin, authenticated, manager, restricted, verified } from "../utility/jwt.js"
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
@@ -24,44 +18,41 @@ async function fastJWT(fastify) {
      */
     fastify.register(fastifyJwt, {
         secret: {
-            private: readFileSync(
-                `${join(__dirname, '..', 'certs')}/private.pem`
-            ),
-            public: readFileSync(`${join(__dirname, '..', 'certs')}/public.pem`)
+            private: readFileSync(`${join(__dirname, "..", "certs")}/private.pem`),
+            public: readFileSync(`${join(__dirname, "..", "certs")}/public.pem`),
         },
-        sign: { algorithm: 'ES256' }
+        sign: { algorithm: "ES256" },
     })
 
     /**
      * * generate token for authorization
      */
-    const token = async function (user) {
-        return await fastify.jwt.sign(
+    const token = async (user) =>
+        await fastify.jwt.sign(
             {
                 id: user.id,
                 email: user.email,
                 email_verified: Boolean(user.email_verified),
                 is_banned: Boolean(user.is_banned),
-                role: user.role
+                role: user.role,
             },
-            { expiresIn: '1d' }
+            { expiresIn: "1d" },
         )
-    }
 
-    fastify.decorate('authenticate', authenticated)
+    fastify.decorate("authenticate", authenticated)
 
-    fastify.decorate('auth', {
+    fastify.decorate("auth", {
         token,
-        verified
+        verified,
     })
 
-    fastify.decorate('role', {
+    fastify.decorate("role", {
         admin,
         manager,
-        restricted
+        restricted,
     })
 }
 
 export default fp(fastJWT, {
-    name: 'fast-jwt'
+    name: "fast-jwt",
 })

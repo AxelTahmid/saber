@@ -4,10 +4,10 @@
  * @param {string} props { per_page, current_page, table, query, sort }
  * @returns pagination
  */
-export default knex => async props => {
+export default (knex) => async (props) => {
     const pagination = {}
     const per_page = props.per_page || 20
-    const sort = props.orderBy || 'desc'
+    const sort = props.orderBy || "desc"
     let page = props.current_page || 1
 
     if (page < 1) page = 1
@@ -16,12 +16,9 @@ export default knex => async props => {
 
     const data_query = props.query
         ? props.query.offset(offset).limit(per_page)
-        : knex(props.table).orderBy('id', sort).offset(offset).limit(per_page)
+        : knex(props.table).orderBy("id", sort).offset(offset).limit(per_page)
 
-    const [total, rows] = await Promise.all([
-        knex(props.table).count('* as count').first(),
-        data_query
-    ])
+    const [total, rows] = await Promise.all([knex(props.table).count("* as count").first(), data_query])
 
     pagination.total = props.query ? rows.length : total.count
     pagination.per_page = per_page

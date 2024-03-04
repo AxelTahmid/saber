@@ -1,6 +1,6 @@
 # Fastify Starter Template
 
-This is a fastify starter template with authentication, otp verification, mail queue, sql adapter. 
+This is a fastify starter template with some batteries included, listed out below:
 
 Includes features :
 
@@ -10,11 +10,12 @@ Includes features :
 - Global Error Handler with formatted response
 - S3 / Object Storage Adapter
 - Rate limiting on Route by IP
+- Performant linting & formatting using rust based `Biome`
 
 ## Project Structure
 
-- app contains all separated features
-- handlers => app logic only => request sanitization & response data
+- app contains all encapsulated functionalities
+- handlers => app logic only, basically controllers => request sanitization & response data
 - services => business logic only => database & cache operations
 - schemas => request validation & response serialization
 

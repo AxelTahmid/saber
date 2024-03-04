@@ -2,40 +2,33 @@
  * * https://docs.aws.amazon.com/sdk-for-javascript/v3/developer-guide/s3-example-creating-buckets.html
  * * https://github.com/awsdocs/aws-doc-sdk-examples/blob/main/javascriptv3/example_code/s3/README.md
  */
-import {
-    ListObjectsCommand,
-    PutObjectCommand,
-    DeleteObjectCommand,
-    DeleteObjectsCommand
-} from '@aws-sdk/client-s3'
+import { DeleteObjectCommand, DeleteObjectsCommand, ListObjectsCommand, PutObjectCommand } from "@aws-sdk/client-s3"
 
-import { storage } from '../../config/environment'
+import { storage } from "../../config/environment"
 /**
  * * Handler GET /v1/gallery/flush
  */
 const flush = async function (request, reply) {
-    await this.cache.flush('gallery:list')
+    await this.cache.flush("gallery:list")
 
     reply.code(200)
     return {
         error: false,
-        message: 'Media Cache Removed'
+        message: "Media Cache Removed",
     }
 }
 /**
  * * Handler GET /v1/gallery/
  */
 const gallery = async function (request, reply) {
-    const key = 'gallery:list'
+    const key = "gallery:list"
 
     let data = await this.cache.get(key)
 
     if (!data) {
-        data = await this.s3.send(
-            new ListObjectsCommand({ Bucket: storage.bucket })
-        )
+        data = await this.s3.send(new ListObjectsCommand({ Bucket: storage.bucket }))
 
-        data.Contents.forEach(_ => {
+        data.Contents.forEach((_) => {
             _.Url = `${storage.connection.endpoint}/${storage.bucket}/${_.Key}`
         })
         await this.cache.set(key, data)
@@ -44,8 +37,8 @@ const gallery = async function (request, reply) {
     reply.code(200)
     return {
         error: false,
-        message: 'Media List Fetched!',
-        data
+        message: "Media List Fetched!",
+        data,
     }
 }
 /**
@@ -58,34 +51,26 @@ const upload = async function (request, reply) {
     const data = await request.file()
     const buffer = await data.toBuffer()
 
-    const allowedMimes = [
-        'image/png',
-        'image/jpg',
-        'image/jpeg',
-        'image/webp',
-        'image/svg+xml'
-    ]
+    const allowedMimes = ["image/png", "image/jpg", "image/jpeg", "image/webp", "image/svg+xml"]
 
     if (!allowedMimes.includes(data.mimetype)) {
-        throw this.httpErrors.notAcceptable(
-            `Type: ${data.mimetype} not allowed!`
-        )
+        throw this.httpErrors.notAcceptable(`Type: ${data.mimetype} not allowed!`)
     }
 
     const uploadParams = {
         Bucket: storage.bucket,
         Key,
-        CacheControl: 'public,max-age=2628000,s-maxage=2628000',
-        Body: buffer
+        CacheControl: "public,max-age=2628000,s-maxage=2628000",
+        Body: buffer,
     }
 
     await this.s3.send(new PutObjectCommand(uploadParams))
-    await this.cache.flush('gallery:list')
+    await this.cache.flush("gallery:list")
 
     reply.code(201)
     return {
         error: false,
-        message: 'Media Created'
+        message: "Media Created",
     }
 }
 
@@ -96,12 +81,12 @@ const destroy = async function (request, reply) {
     const { Key } = request.query
 
     await this.s3.send(new DeleteObjectCommand({ Bucket: storage.bucket, Key }))
-    await this.cache.flush('gallery:list')
+    await this.cache.flush("gallery:list")
 
     reply.code(201)
     return {
         error: false,
-        message: `Media: ${Key} deleted.`
+        message: `Media: ${Key} deleted.`,
     }
 }
 
@@ -112,15 +97,15 @@ const destroyMany = async function (request, reply) {
     await this.s3.send(
         new DeleteObjectsCommand({
             Bucket: storage.bucket,
-            Delete: request.body
-        })
+            Delete: request.body,
+        }),
     )
-    await this.cache.flush('gallery:list')
+    await this.cache.flush("gallery:list")
 
     reply.code(201)
     return {
         error: false,
-        message: 'Selected Files deleted'
+        message: "Selected Files deleted",
     }
 }
 

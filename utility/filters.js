@@ -1,29 +1,29 @@
 const treeByParent = (nodes, parentId) => {
     return nodes
-        .filter(node => node.parent_id === parentId)
+        .filter((node) => node.parent_id === parentId)
         .reduce(
             (tree, node) => [
                 ...tree,
                 {
                     ...node,
-                    children: treeByParent(nodes, node.id)
-                }
+                    children: treeByParent(nodes, node.id),
+                },
             ],
-            []
+            [],
         )
 }
 
 /**
  * * Create recursive tree
  */
-const treeFromList = nodes => {
+const treeFromList = (nodes) => {
     const productMap = new Map()
 
-    nodes.forEach(item => {
+    nodes.forEach((item) => {
         productMap.set(item.id, { ...item, children: [] })
     })
 
-    nodes.forEach(item => {
+    nodes.forEach((item) => {
         if (item.parent_id) {
             const parentItem = productMap.get(item.parent_id)
 
@@ -33,24 +33,24 @@ const treeFromList = nodes => {
         }
     })
 
-    const rootNodes = [...productMap.values()].filter(item => !item.parent_id)
+    const rootNodes = [...productMap.values()].filter((item) => !item.parent_id)
     return rootNodes
 }
 
 function topLevel(data) {
-    return data.filter(node => !node.parent_id)
+    return data.filter((node) => !node.parent_id)
 }
 
 function traverse(data, parentId) {
-    const children = data.filter(each => each.parent_id === parentId)
-    children.forEach(child => {
+    const children = data.filter((each) => each.parent_id === parentId)
+    children.forEach((child) => {
         child.children = traverse(data, child.id)
     })
     return children
 }
 
 function structuredTree(data) {
-    return topLevel(data).map(each => {
+    return topLevel(data).map((each) => {
         each.children = traverse(data, each.id)
         return each
     })
@@ -59,5 +59,5 @@ function structuredTree(data) {
 export default {
     structuredTree,
     treeFromList,
-    treeByParent
+    treeByParent,
 }

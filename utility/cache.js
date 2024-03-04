@@ -25,39 +25,39 @@ export default class CacheUtility {
 
     async flush_pattern(pattern) {
         const stream = this.redis.scanStream({
-            match: pattern
+            match: pattern,
         })
 
         return new Promise((resolve, reject) => {
             stream
-                .on('data', (keys = []) => {
+                .on("data", (keys = []) => {
                     if (keys.length) {
                         const pipeline = this.redis.pipeline()
-                        keys.forEach(key => pipeline.del(key))
+                        keys.forEach((key) => pipeline.del(key))
                         pipeline.exec()
                     }
                 })
-                .on('error', err => reject(err))
-                .on('end', () => resolve(`Cache cleared on: ${pattern}`))
+                .on("error", (err) => reject(err))
+                .on("end", () => resolve(`Cache cleared on: ${pattern}`))
         })
     }
 
     // * https://stackoverflow.com/questions/54308893/problem-using-ioredis-scanstream-to-scan-through-all-redis-keys
     async get_pattern(pattern) {
         const stream = this.redis.scanStream({
-            match: pattern
+            match: pattern,
         })
         // count: 10
         return new Promise((resolve, reject) => {
             let keysArray = []
             stream
-                .on('data', (keys = []) => {
+                .on("data", (keys = []) => {
                     if (keys.length) {
                         keysArray = [...keys]
                     }
                 })
-                .on('error', err => reject(err))
-                .on('end', () => resolve(keysArray))
+                .on("error", (err) => reject(err))
+                .on("end", () => resolve(keysArray))
         })
     }
 }
