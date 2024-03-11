@@ -1,15 +1,19 @@
-version: '3.8'
+version: "3.8"
 
 services:
   app:
-    container_name: 'api'
+    container_name: "api"
     env_file: .env
     build:
       context: .
+      target: dev
       dockerfile: Dockerfile
     ports:
       - "3000:${PORT}"
     tty: true
+    volumes:
+      - ".:/app:delegated"
+      - "api_node_modules:/app/node_modules"
     links:
       - database
       - redis
@@ -18,13 +22,15 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
+    networks:
+      - starter
 
   database:
-    image: 'postgres:16-bookworm'
+    image: "postgres:16.1-bookworm"
     container_name: db
-    env_file: '.env'
+    env_file: ".env"
     environment:
-      POSTGRES_PASSWORD: ${DB_ROOT_PASS}
+      POSTGRES_PASSWORD: ${DB_ROOT_PASSWORD}
       POSTGRES_DB: "${DB_NAME}"
       POSTGRES_USER: "${DB_USER}"
     ports:
@@ -32,23 +38,32 @@ services:
     expose:
       - "5432"
     volumes:
-      - "db_data:/var/lib/postgresql/data"
+      - "acs_db_data:/var/lib/postgresql/data"
     healthcheck:
       test: ["CMD", "pg_isready", "-q", "-d", "${DB_NAME}", "-U", "${DB_USER}"]
-      interval: 60s
+      interval: 10s
       timeout: 10s
       retries: 3
+    networks:
+      - starter
 
   redis:
-    image: 'redis:alpine'
-    container_name: 'redis'
+    image: "redis:alpine"
+    container_name: "redis"
     expose:
       - "6379"
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
-      interval: 60s
+      interval: 10s
       timeout: 5s
       retries: 3
+    networks:
+      - starter
 
 volumes:
-  db_data:
+  acs_db_data:
+  api_node_modules:
+
+networks:
+  starter:
+    # external: true

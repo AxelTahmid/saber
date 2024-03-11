@@ -21,11 +21,16 @@ Includes features :
 
 ## Installation Steps
 
-### Docker :
-
-Install Docker and Docker Compose
+Install `Docker` and `Docker Compose`. This config uses Docker Compose V2. Also ensure `make` tools are availabel for you.
 Set the `.env` values before starting instances
 
-```
-docker compose up
+```sh
+# start container
+make dev
+
+# enter container
+make enter
+# migrate from inside container
+yarn migrate
+yarn seed
 ```

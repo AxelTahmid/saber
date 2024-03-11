@@ -6,13 +6,13 @@ on:
     inputs:
       tag:
         type: choice
-        description: 'Image Target'
+        description: "Image Target"
         default: dev
         required: true
         options:
-        - prod
-        - dev
-        
+          - prod
+          - dev
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -36,6 +36,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
+          target: prod
           platforms: linux/amd64,linux/arm64
           push: true
           tags: <repo-name>:api-${{ github.event.inputs.tag }}
