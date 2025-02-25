@@ -1,4 +1,4 @@
-.PHONY: check-env tls jwt up down fresh init dev exec-db log log-db db-refresh
+.PHONY: check-env tls keys jwt up down fresh init dev exec-db log log-db db-refresh
 
 # Load .env file if it exists
 ifneq (,$(wildcard ./.env))
@@ -18,6 +18,8 @@ check-env:
 # Certificate and Key Generation
 # ----------------------------------------------------------------------
 
+keys: jwt tls
+
 # Generate self-signed TLS certificates (local development only)
 tls:
 	@echo "Generating TLS certificates..."
@@ -36,8 +38,8 @@ jwt:
 		echo "openssl not found or supported"; \
 	fi; \
 	cd certs && \
-	openssl ecparam -genkey -name prime256v1 -noout -out jwt.pem && \
-	openssl ec -in jwt.pem -pubout -out jwt.pem
+	openssl ecparam -genkey -name prime256v1 -noout -out pvt.pem && \
+	openssl ec -in pvt.pem -pubout -out pub.pem
 
 # ----------------------------------------------------------------------
 # Docker Management
