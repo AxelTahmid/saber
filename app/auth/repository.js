@@ -13,7 +13,6 @@ class AuthRepository {
     async createUser(app, { email, password }) {
         try {
             const userID = await app.knex("auth_users").insert({ email, password }).returning("id")
-            console.log("userID ==>", userID)
             return userID[0].id
         } catch (err) {
             if (err.code === app.pgerr.unique) {
