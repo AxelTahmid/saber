@@ -29,14 +29,14 @@ services:
     env_file: ".env"
     environment:
       POSTGRES_PASSWORD: ${DB_ROOT_PASSWORD}
-      POSTGRES_DB: "${DB_NAME}"
-      POSTGRES_USER: "${DB_USER}"
+      POSTGRES_DB: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
     ports:
       - 5432:5432
     expose:
       - "5432"
     volumes:
-      - "acs_db_data:/var/lib/postgresql/data"
+      - "db_data:/var/lib/postgresql/data"
     healthcheck:
       test: ["CMD", "pg_isready", "-q", "-d", "${DB_NAME}", "-U", "${DB_USER}"]
       interval: 10s
@@ -59,7 +59,7 @@ services:
       - starter
 
 volumes:
-  acs_db_data:
+  db_data:
   api_node_modules:
 
 networks:

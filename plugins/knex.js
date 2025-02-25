@@ -2,7 +2,7 @@ import fp from "fastify-plugin"
 import knex from "knex"
 import paginator from "../utility/knex.js"
 
-async function fastifyKnex(fastify, options, next) {
+function fastifyKnex(fastify, options, next) {
     try {
         if (!fastify.knex) {
             const handler = knex(options)

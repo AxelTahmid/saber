@@ -14,7 +14,6 @@ export const userObject = S.object()
     .prop("email", S.string())
     .prop("email_verified", S.boolean())
     .prop("role", S.enum(["customer", "admin", "manager"]))
-    .prop("is_banned", S.boolean())
     .prop("created_at", S.string().format("date"))
     .prop("updated_at", S.string().format("date"))
 

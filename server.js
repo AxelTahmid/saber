@@ -1,6 +1,7 @@
 import "dotenv/config"
-
-import { join } from "node:path"
+import { fileURLToPath } from "node:url"
+import { readFileSync } from "node:fs"
+import { join, dirname } from "node:path"
 
 import fastifyCors from "@fastify/cors"
 import fastifyFormbody from "@fastify/formbody"
@@ -13,19 +14,26 @@ import fastify from "fastify"
 
 import routes from "./app/routes.js"
 import conf from "./config/environment.js"
-import knexfile from "./database/knexfile.js"
+import knexfile from "./database/knexfile.mjs"
 import bullMQ from "./plugins/bullMQ.js"
 import jwt from "./plugins/jwt.js"
 import knex from "./plugins/knex.js"
-import redis from "./plugins/redis.js"
+// import redis from "./plugins/redis.js";
 
-//  give array of ip for trustproxy in production
+// Increase the maximum number of listeners to avoid warnings
+process.setMaxListeners(20)
+
+// Compute __dirname for ESM modules
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+
+// Create the Fastify instance with HTTPS support
 const app = fastify({
     trustProxy: true,
     http2: true,
     https: {
-        key: fs.readFileSync(join(__dirname, "..", "https", "tls.key")),
-        cert: fs.readFileSync(join(__dirname, "..", "https", "tls.cert")),
+        key: readFileSync(join(__dirname, "certs", "tls.key")),
+        cert: readFileSync(join(__dirname, "certs", "tls.crt")),
     },
     requestTimeout: 120000,
     logger: {
@@ -41,10 +49,12 @@ const app = fastify({
     },
 })
 
+// In development, add localhost regex to CORS origins
 if (conf.isDevEnvironment) {
     conf.cors.origin.push(/localhost(:\d{1,5})?/)
 }
 
+// Register plugins
 await app
     .register(fastifyHelmet, { global: true })
     .register(fastifyCors, conf.cors)
@@ -52,12 +62,12 @@ await app
     .register(fastifySensible)
     .register(fastifyUnderPressure, conf.healthcheck)
     .register(fastifyRateLimit, conf.rate_limit)
-    .register(redis, conf.redis)
+    // .register(redis, conf.redis)
     .register(jwt)
     .register(bullMQ, conf.bullMQ)
 
 /**
- * * Database
+ * Database registration
  */
 if (conf.isDevEnvironment) {
     app.log.info("using development database")
@@ -68,12 +78,12 @@ if (conf.isDevEnvironment) {
 }
 
 /**
- * * Register the app directory
+ * Register application routes
  */
 await app.register(routes)
 
 /**
- * * delay is the number of milliseconds for the graceful close to finish
+ * Setup graceful shutdown
  */
 const closeListeners = closeWithGrace({ delay: 2000 }, async ({ err }) => {
     app.log.info("graceful shutdown -> entered")
@@ -85,16 +95,17 @@ const closeListeners = closeWithGrace({ delay: 2000 }, async ({ err }) => {
 
 app.addHook("onClose", async (instance, done) => {
     closeListeners.uninstall()
-    app.log.info("graceful shutdown -> sucessful")
+    app.log.info("graceful shutdown -> successful")
     done()
 })
 
+// Start the server and catch startup errors
 try {
-    app.listen({
+    await app.listen({
         host: conf.host,
         port: conf.port,
     })
 } catch (err) {
     app.log.error(err)
-    throw Error(err)
+    process.exit(1)
 }

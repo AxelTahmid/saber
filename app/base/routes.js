@@ -1,43 +1,41 @@
 import helper from "./handlers.js"
 import schema from "./schema.js"
 
-export default function base(fastify, done) {
-    fastify.route({
+export default function base(app) {
+    app.route({
         method: "GET",
         url: "/",
         schema: schema.base,
         handler: helper.base,
     })
 
-    fastify.route({
+    app.route({
         method: "POST",
         url: "/otp",
-        onRequest: fastify.role.restricted,
+        onRequest: app.role.restricted,
         schema: schema.arrayofString,
         handler: helper.otpKeys,
     })
 
-    fastify.route({
+    app.route({
         method: "POST",
         url: "/redis",
-        onRequest: fastify.role.restricted,
+        onRequest: app.role.restricted,
         handler: helper.redisData,
     })
 
-    fastify.route({
+    app.route({
         method: "POST",
         url: "/queue",
-        onRequest: fastify.role.restricted,
+        onRequest: app.role.restricted,
         schema: schema.queueAction,
         handler: helper.queueAction,
     })
 
-    fastify.route({
+    app.route({
         method: "POST",
         url: "/flush",
-        onRequest: fastify.role.restricted,
+        onRequest: app.role.restricted,
         handler: helper.flushRedis,
     })
-
-    done()
 }

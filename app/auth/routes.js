@@ -2,61 +2,52 @@ import bcrypt from "../../plugins/bcrypt.js"
 
 import auth from "./handlers.js"
 
-import {
-    loginSchema,
-    meSchema,
-    registerSchema,
-    requestOTPSchema,
-    resetPasswordSchema,
-    verifyEmailSchema,
-} from "./auth.schemas.js"
+import s from "./schemas.js"
 
-export default function publicAuth(fastify, done) {
-    fastify.register(bcrypt)
+export default function routes(app) {
+    app.register(bcrypt)
 
-    fastify.route({
+    app.route({
         method: "POST",
         url: "/register",
-        schema: registerSchema,
+        schema: s.registerSchema,
         handler: auth.register,
     })
 
-    fastify.route({
+    app.route({
         method: "POST",
         url: "/login",
-        schema: loginSchema,
+        schema: s.loginSchema,
         handler: auth.login,
     })
 
-    fastify.route({
+    app.route({
         method: "GET",
         url: "/me",
-        onRequest: fastify.authenticate,
-        schema: meSchema,
+        onRequest: app.authenticate,
+        schema: s.meSchema,
         handler: auth.me,
     })
 
-    fastify.route({
+    app.route({
         method: "POST",
         url: "/otp-code",
-        schema: requestOTPSchema,
+        schema: s.requestOTPSchema,
         handler: auth.requestOTP,
     })
 
-    fastify.route({
+    app.route({
         method: "POST",
         url: "/verify-email",
-        onRequest: fastify.authenticate,
-        schema: verifyEmailSchema,
+        onRequest: app.authenticate,
+        schema: s.verifyEmailSchema,
         handler: auth.verifyEmail,
     })
 
-    fastify.route({
+    app.route({
         method: "POST",
         url: "/reset-password",
-        schema: resetPasswordSchema,
+        schema: s.resetPasswordSchema,
         handler: auth.resetPassword,
     })
-
-    done()
 }

@@ -4,6 +4,8 @@ import conf from "../../config/environment.js"
 import repo from "./repository.js"
 
 class AuthService {
+    
+
     async verifyCaptcha(app, token) {
         if (conf.isDevEnvironment) {
             return true

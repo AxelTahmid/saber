@@ -1,5 +1,4 @@
-import authAdminRoutes from "./auth/admin/auth.routes.js"
-import authPublicRoutes from "./auth/auth.routes.js"
+import authRoutes from "./auth/routes.js"
 import rootRoutes from "./base/routes.js"
 
 export default function routes(app) {
@@ -17,5 +16,5 @@ export default function routes(app) {
 
     app.register(rootRoutes)
 
-    app.register(authPublicRoutes, { prefix: "/auth" })
+    app.register(authRoutes, { prefix: "/auth" })
 }

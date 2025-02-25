@@ -28,7 +28,7 @@ export default {
         client: "pg",
         searchPath: ["knex", "public"],
         acquireConnectionTimeout: 10000,
-        connection: process.env.PG_CONNECTION_STRING,
+        connection: process.env.DB_URL,
         pool: {
             min: 1,
             max: 50,

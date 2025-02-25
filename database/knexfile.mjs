@@ -3,7 +3,7 @@ import "dotenv/config"
 export default {
     development: {
         client: "pg",
-        connection: process.env.PG_CONNECTION_STRING,
+        connection: process.env.DB_URL,
         searchPath: ["knex", "public"],
         acquireConnectionTimeout: 10000,
         pool: {

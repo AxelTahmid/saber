@@ -1,7 +1,7 @@
 import fp from "fastify-plugin"
 
 import Redis from "ioredis"
-const { CacheService } = require("../utility/cache")
+// import CacheService from "../utility/cache"
 
 async function fastifyRedis(fastify, options) {
     const redis = new Redis(options)
@@ -26,9 +26,9 @@ async function fastifyRedis(fastify, options) {
         fastify.decorate("redis", redis)
     }
 
-    if (!fastify.cache) {
-        fastify.decorate("cache", new CacheService(redis))
-    }
+    // if (!fastify.cache) {
+    //     fastify.decorate("cache", new CacheService(redis))
+    // }
 
     fastify.addHook("onClose", async (instance) => {
         await instance.redis.quit()

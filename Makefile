@@ -97,13 +97,13 @@ db-refresh:
 	echo -e "$$GREEN*************************************************"; \
 	echo -e "*  Rolling Back Migrations if Exists           *"; \
 	echo -e "*************************************************$$NC"; \
-	npx knex migrate:rollback --all --debug; \
+	npx knex migrate:rollback --all --knexfile "$(PWD)/database/knexfile" --verbose --esm; \
 	echo -e "$$GREEN*************************************************"; \
 	echo -e "*  Migrating Tables                            *"; \
 	echo -e "*************************************************$$NC"; \
-	npx knex migrate:latest --debug; \
+	npx knex migrate:latest --knexfile "$(PWD)/database/knexfile" --verbose --esm; \
 	echo -e "$$GREEN*************************************************"; \
 	echo -e "*  Seeding Tables                              *"; \
 	echo -e "*************************************************$$NC"; \
-	npx knex seed:run --debug	
+	npx knex seed:run --knexfile "$(PWD)/database/knexfile" --verbose --esm
 
