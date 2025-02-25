@@ -1,7 +1,19 @@
 {
-    "$schema": "https://biomejs.dev/schemas/1.5.3/schema.json",
+    "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
     "organizeImports": {
         "enabled": true
+    },
+    "vcs": {
+        "enabled": true,
+        "clientKind": "git",
+        "useIgnoreFile": true,
+        "defaultBranch": "main"
+    },
+    "files": {
+        "ignore": [
+            ".yarn/**",
+            ".husky/**"
+        ]
     },
     "formatter": {
         "enabled": true,

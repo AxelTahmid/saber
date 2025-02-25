@@ -1,3 +1,0 @@
-{
-    "*.js": ["npx @biomejs/biome check --apply ."]
-}

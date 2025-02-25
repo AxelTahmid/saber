@@ -1,7 +1,7 @@
 import fp from "fastify-plugin"
 
 import Redis from "ioredis"
-import CacheUtility from "../utility/cache.js"
+const { CacheService } = require("../utility/cache")
 
 async function fastifyRedis(fastify, options) {
     const redis = new Redis(options)
@@ -14,12 +14,24 @@ async function fastifyRedis(fastify, options) {
         fastify.log.error(err, "Redis connection error")
     })
 
-    if (!fastify.redis) fastify.decorate("redis", redis)
+    redis.on("close", () => {
+        fastify.log.warn("Redis connection closed")
+    })
 
-    if (!fastify.cache) fastify.decorate("cache", new CacheUtility(redis))
+    redis.on("reconnecting", () => {
+        fastify.log.info("Redis attempting to reconnect")
+    })
 
-    fastify.addHook("onClose", async (instance, done) => {
-        instance.redis.quit(done)
+    if (!fastify.redis) {
+        fastify.decorate("redis", redis)
+    }
+
+    if (!fastify.cache) {
+        fastify.decorate("cache", new CacheService(redis))
+    }
+
+    fastify.addHook("onClose", async (instance) => {
+        await instance.redis.quit()
     })
 
     return redis

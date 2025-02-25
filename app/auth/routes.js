@@ -1,6 +1,6 @@
-import bcrypt from "../../../plugins/bcrypt.js"
+import bcrypt from "../../plugins/bcrypt.js"
 
-import auth from "./auth.handlers.js"
+import auth from "./handlers.js"
 
 import {
     loginSchema,

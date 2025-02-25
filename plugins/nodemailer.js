@@ -28,7 +28,9 @@ function fastifyMailer(fastify, options, next) {
     if (namespace) {
         if (transporter[namespace]) {
             return next(new Error(`@fastify/nodemailer '${namespace}' is a reserved keyword`))
-        } else if (!fastify.mailer) {
+        }
+
+        if (!fastify.mailer) {
             fastify.decorate("mailer", Object.create(null)).addHook("onClose", (fastify, done) => {
                 fastify.mailer.close(done)
             })
@@ -40,11 +42,11 @@ function fastifyMailer(fastify, options, next) {
     } else {
         if (fastify.mailer) {
             return next(new Error("@fastify/nodemailer has already been registered"))
-        } else {
-            fastify.decorate("mailer", transporter).addHook("onClose", (fastify, done) => {
-                fastify.mailer.close(done)
-            })
         }
+
+        fastify.decorate("mailer", transporter).addHook("onClose", (fastify, done) => {
+            fastify.mailer.close(done)
+        })
     }
 
     next()

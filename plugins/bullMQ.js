@@ -28,24 +28,24 @@ async function fastifyBullMQ(fastify, opts, next) {
 
             fastify.decorate("worker", worker)
 
-            fastify.worker.on("completed", (job, returnvalue) => {
+            worker.on("completed", (job, returnvalue) => {
                 fastify.log.info({ job, returnvalue }, "Job Completed")
             })
 
-            fastify.worker.on("failed", (job, error) => {
+            worker.on("failed", (job, error) => {
                 fastify.log.error({ job, error }, "Job Failed")
             })
 
-            fastify.worker.on("error", (error) => {
+            worker.on("error", (error) => {
                 fastify.log.error({ error }, "Unhandled Exception Thrown by Worker")
                 throw new Error(error)
             })
 
-            fastify.worker.on("drained", () => {
+            worker.on("drained", () => {
                 fastify.log.info(`${opts.queue} - is drained, no more jobs left`)
             })
 
-            // fastify.worker.run()
+            // worker.run()
 
             // no needed to close queue, global
             fastify.addHook("onClose", (fastify, done) => {

@@ -9,34 +9,14 @@ exports.seed = async (knex) => {
         {
             email: "customer@test.com",
             email_verified: true,
+            role: "customer",
             password: "$2a$10$mYKo/KMUnAWpS5hZkAmyyuwocUTNKv1dYrJC534cT7TJ/1.cSeSF2",
         },
-        {
-            email: "axel.tahmid@gmail.com",
-            email_verified: true,
-            password: "$2a$10$mYKo/KMUnAWpS5hZkAmyyuwocUTNKv1dYrJC534cT7TJ/1.cSeSF2",
-        },
-    ])
-
-    await knex("user_roles").insert([
-        {
-            role: "admin",
-        },
-        {
-            role: "manager",
-        },
-    ])
-
-    await knex("user_admins").insert([
         {
             email: "admin@test.com",
+            email_verified: true,
+            role: "admin",
             password: "$2a$10$mYKo/KMUnAWpS5hZkAmyyuwocUTNKv1dYrJC534cT7TJ/1.cSeSF2",
-            role_id: 1,
-        },
-        {
-            email: "manager@test.com",
-            password: "$2a$10$mYKo/KMUnAWpS5hZkAmyyuwocUTNKv1dYrJC534cT7TJ/1.cSeSF2",
-            role_id: 2,
         },
     ])
 }

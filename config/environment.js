@@ -31,7 +31,7 @@ export default {
         connection: process.env.PG_CONNECTION_STRING,
         pool: {
             min: 1,
-            max: 10,
+            max: 50,
         },
     },
     storage: {
@@ -108,10 +108,10 @@ export default {
             },
         },
         worker_options: {
-            concurrency: parseInt(process.env.QUEUE_CONCURRENCY, 10) || 10,
+            concurrency: Number.parseInt(process.env.QUEUE_CONCURRENCY, 10) || 10,
             limiter: {
-                max: parseInt(process.env.QUEUE_GLOBAL_CONCURRENCY, 10) || 60,
-                duration: parseInt(process.env.QUEUE_LIMIT_DURATION, 10) || 1000,
+                max: Number.parseInt(process.env.QUEUE_GLOBAL_CONCURRENCY, 10) || 60,
+                duration: Number.parseInt(process.env.QUEUE_LIMIT_DURATION, 10) || 1000,
             },
         },
         queue: process.env.QUEUE_NAME || "mail-queue",

@@ -1,5 +1,7 @@
 import "dotenv/config"
 
+import { join } from "node:path"
+
 import fastifyCors from "@fastify/cors"
 import fastifyFormbody from "@fastify/formbody"
 import fastifyHelmet from "@fastify/helmet"
@@ -20,6 +22,11 @@ import redis from "./plugins/redis.js"
 //  give array of ip for trustproxy in production
 const app = fastify({
     trustProxy: true,
+    http2: true,
+    https: {
+        key: fs.readFileSync(join(__dirname, "..", "https", "tls.key")),
+        cert: fs.readFileSync(join(__dirname, "..", "https", "tls.cert")),
+    },
     requestTimeout: 120000,
     logger: {
         transport: conf.isDevEnvironment

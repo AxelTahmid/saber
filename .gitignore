@@ -58,4 +58,6 @@ profile*
 *clinic*
 *flamegraph*
 *.pem
+*.crt
+*.key
 *.gz

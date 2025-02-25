@@ -3,7 +3,7 @@ import fp from "fastify-plugin"
 
 import { readFileSync } from "node:fs"
 import { dirname, join } from "node:path"
-import { fileURLToPath } from "url"
+import { fileURLToPath } from "node:url"
 
 import { admin, authenticated, manager, restricted, verified } from "../utility/jwt.js"
 
@@ -33,7 +33,6 @@ async function fastJWT(fastify) {
                 id: user.id,
                 email: user.email,
                 email_verified: Boolean(user.email_verified),
-                is_banned: Boolean(user.is_banned),
                 role: user.role,
             },
             { expiresIn: "1d" },

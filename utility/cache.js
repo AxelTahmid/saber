@@ -1,21 +1,23 @@
-/**
- * * Cache Utility, Decorated and injected with redis
- */
-export default class CacheUtility {
-    super(redis) {
+class CacheService {
+    constructor(redis) {
         this.redis = redis
     }
 
-    async get(key) {
+    async get(key, parse = true) {
         const data = await this.redis.get(key)
-        return data ? JSON.parse(data) : false
+
+        if (data) {
+            return parse ? JSON.parse(data) : data
+        }
+
+        return false
     }
 
-    async set(key, data, convert = true) {
-        if (convert) {
-            await this.redis.set(key, JSON.stringify(data))
+    async set(key, data, stringify = true, exp = 300) {
+        if (stringify) {
+            await this.redis.set(key, JSON.stringify(data), "EX", exp)
         } else {
-            await this.redis.set(key, data)
+            await this.redis.set(key, data, "EX", exp)
         }
     }
 
@@ -60,4 +62,8 @@ export default class CacheUtility {
                 .on("end", () => resolve(keysArray))
         })
     }
+}
+
+module.exports = {
+    CacheService,
 }

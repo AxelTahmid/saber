@@ -14,3 +14,4 @@ nodemon.json
 node_modules
 README.md
 database
+docs

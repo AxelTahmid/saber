@@ -1,6 +1,6 @@
 import { S } from "fluent-json-schema"
 
-import { emailPassObj, responseListObject, responseObject, userObject } from "../../../config/schema.js"
+import { emailPassObj, responseListObject, responseObject, userObject } from "../../config/schema.js"
 
 /**
  * * POST /v1/auth/login
