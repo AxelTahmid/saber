@@ -1,4 +1,5 @@
 import svc from "./service.js"
+import repo from "./repository.js"
 
 /**
  * * POST /v1/auth/login
@@ -36,7 +37,7 @@ const register = async function (request, reply) {
  * * GET /v1/auth/me
  */
 const me = async function (request, reply) {
-    const data = await svc.fetchUser(this, request.user.id)
+    const data = await repo.getUserById(this, request.user.id)
 
     reply.code(200)
     return {
