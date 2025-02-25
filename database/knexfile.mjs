@@ -1,4 +1,10 @@
-import "dotenv/config"
+import dotenv from "dotenv"
+
+dotenv.config({ path: "../.env" })
+
+if (!process.env.DB_URL) {
+    throw Error("DB_URL is undefined or could not be parsed")
+}
 
 export default {
     development: {

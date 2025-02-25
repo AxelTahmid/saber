@@ -2,10 +2,10 @@
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.up = async (knex) => {
+export const up = async (knex) => {
     // Create the auth_users table
     await knex.schema.createTable("auth_users", (table) => {
-        table.specificType("id", "INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,")
+        table.specificType("id", "INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY")
         table.text("email").notNullable().defaultTo("")
         table.boolean("email_verified").notNullable().defaultTo(false)
         table.text("password").notNullable()
@@ -34,7 +34,7 @@ exports.up = async (knex) => {
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.down = async (knex) => {
+export const down = async (knex) => {
     // Drop the enum type, trigger, and table
     await knex.raw("DROP TYPE IF EXISTS role_type CASCADE;")
     await knex.raw("DROP TRIGGER IF EXISTS set_auth_user_updated_at ON auth_users;")

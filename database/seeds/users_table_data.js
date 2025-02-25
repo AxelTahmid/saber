@@ -3,9 +3,9 @@
  * @returns { Promise<void> }
  * * npx knex seed:run --specific=users_table_data.js
  */
-exports.seed = async (knex) => {
+export const seed = async (knex) => {
     // pass is 123456
-    await knex("user_customers").insert([
+    await knex("auth_users").insert([
         {
             email: "customer@test.com",
             email_verified: true,

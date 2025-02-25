@@ -2,7 +2,7 @@
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.up = async (knex) => {
+export const up = async (knex) => {
     await knex.raw(`
         CREATE OR REPLACE FUNCTION set_updated_at()
         RETURNS TRIGGER AS $$
@@ -18,6 +18,6 @@ exports.up = async (knex) => {
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
  */
-exports.down = async (knex) => {
+export const down = async (knex) => {
     await knex.raw("DROP FUNCTION IF EXISTS set_updated_at")
 }
