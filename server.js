@@ -18,7 +18,7 @@ import knexfile from "./database/knexfile.mjs"
 import bullMQ from "./plugins/bullMQ.js"
 import jwt from "./plugins/jwt.js"
 import knex from "./plugins/knex.js"
-// import redis from "./plugins/redis.js";
+import redis from "./plugins/redis.js"
 
 // Increase the maximum number of listeners to avoid warnings
 process.setMaxListeners(20)
@@ -32,6 +32,7 @@ const app = fastify({
     trustProxy: true,
     http2: true,
     https: {
+        allowHTTP1: true,
         key: readFileSync(join(__dirname, "certs", "tls.key")),
         cert: readFileSync(join(__dirname, "certs", "tls.crt")),
     },
@@ -62,7 +63,7 @@ await app
     .register(fastifySensible)
     .register(fastifyUnderPressure, conf.healthcheck)
     .register(fastifyRateLimit, conf.rate_limit)
-    // .register(redis, conf.redis)
+    .register(redis, conf.redis)
     .register(jwt)
     .register(bullMQ, conf.bullMQ)
 
