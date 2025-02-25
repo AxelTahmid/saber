@@ -11,8 +11,16 @@ class AuthRepository {
     }
 
     async createUser(app, { email, password }) {
-        const userID = await app.knex("auth_users").insert({ email, password }).returning("id")
-        return userID[0].id
+        try {
+            const userID = await app.knex("auth_users").insert({ email, password }).returning("id")
+            console.log("userID ==>", userID)
+            return userID[0].id
+        } catch (err) {
+            if (err.code === app.pgerr.unique) {
+                throw new Error(`User ${email} aleady exists`)
+            }
+            throw new Error(err)
+        }
     }
 
     async updateUserEmailVerified(app, email) {

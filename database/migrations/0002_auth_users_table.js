@@ -6,7 +6,7 @@ export const up = async (knex) => {
     // Create the auth_users table
     await knex.schema.createTable("auth_users", (table) => {
         table.specificType("id", "INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY")
-        table.text("email").notNullable().defaultTo("")
+        table.text("email").notNullable().unique()
         table.boolean("email_verified").notNullable().defaultTo(false)
         table.text("password").notNullable()
         table

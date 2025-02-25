@@ -10,11 +10,11 @@ export default function routes(app) {
             }),
         },
         (_, reply) => {
-            reply.code(404).send({ error: true, message: "404 - Route Not Found" })
+            reply.code(500).send({ error: true, message: "Route Not Found" })
         },
     )
 
     app.register(rootRoutes)
 
-    app.register(authRoutes, { prefix: "/auth" })
+    app.register(authRoutes, { prefix: "/v1/auth" })
 }

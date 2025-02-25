@@ -28,8 +28,8 @@ class AuthService {
         return true
     }
 
-    async authenticate(app, props) {
-        const { email, password } = props || {}
+    async authenticate(app, params) {
+        const { email, password } = params || {}
         const key = `timeout:${email}`
         let attempt = await app.cache.get(key)
         if (attempt >= 5) {
@@ -48,12 +48,8 @@ class AuthService {
         return await app.auth.token(user)
     }
 
-    async registration(app, props) {
-        const { email, password } = props || {}
-        const existingUser = await repo.getUserByEmail(app, email)
-        if (existingUser) {
-            throw app.httpErrors.badRequest(`User: ${email} already exists! Please Login`)
-        }
+    async registration(app, params) {
+        const { email, password } = params || {}
         const hashedPassword = await app.bcrypt.hash(password)
         const userId = await repo.createUser(app, { email, password: hashedPassword })
         const user = {
@@ -73,8 +69,8 @@ class AuthService {
         })
     }
 
-    async updateUserPassword(app, props) {
-        const { email, password } = props || {}
+    async updateUserPassword(app, params) {
+        const { email, password } = params || {}
         const hashedPassword = await app.bcrypt.hash(password)
         await repo.updateUserPassword(app, { email, password: hashedPassword })
     }
@@ -93,10 +89,10 @@ class AuthService {
         return otp_code
     }
 
-    async verifyOTP(app, props) {
-        const key = `otp:${props.email}`
+    async verifyOTP(app, params) {
+        const key = `otp:${params.email}`
         const otp = await app.redis.get(key)
-        if (otp && otp === props.code) {
+        if (otp && otp === params.code) {
             await app.redis.del(key)
             return true
         }
