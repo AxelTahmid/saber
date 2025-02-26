@@ -1,4 +1,4 @@
-import { S } from "fluent-json-schema"
+import { type JSONSchema, S } from "fluent-json-schema"
 
 import { replyObj } from "../../config/schema.js"
 
@@ -8,7 +8,7 @@ export const userObject = S.object()
     .prop("email_verified", S.boolean())
     .prop("role", S.enum(["customer", "admin", "manager"]))
     .prop("created_at", S.string().format("date"))
-    .prop("updated_at", S.string().format("date"))
+    .prop("updated_at", S.string().format("date")) satisfies JSONSchema
 
 export const emailPassObj = S.object()
     .prop("email", S.string().minLength(6).maxLength(100).format("email").required())
