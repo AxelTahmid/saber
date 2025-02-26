@@ -20,10 +20,18 @@
 			"@types",
 			"fastify",
 			"bullmq",
-			"@fastify/jwt",
 			"knex",
 			"ioredis",
-			"@aws-sdk/client-s3"
+			"@aws-sdk/client-s3",
+			"fluent-json-schema",
+			"@fastify/cors",
+			"@fastify/formbody",
+			"@fastify/helmet",
+			"@fastify/jwt",
+			"@fastify/multipart",
+			"@fastify/rate-limit",
+			"@fastify/sensible",
+			"@fastify/under-pressure"
 		],
 		"baseUrl": "./src",
 		"paths": {

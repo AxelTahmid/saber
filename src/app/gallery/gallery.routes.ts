@@ -7,9 +7,7 @@ import gallerySchema from "./gallery.schema";
 import { s_flush } from "../../config/schema";
 
 export default function gallery(fastify) {
-	fastify.register(fastifyMultipart, {
-		limits: storage.multer,
-	});
+	fastify.register(fastifyMultipart, storage.multer)
 
 	const s3credentials = {
 		requestHandler: fastify.request,

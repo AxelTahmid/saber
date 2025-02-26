@@ -1,4 +1,4 @@
-const base = async function (request, reply) {
+const base = async function (request: FastifyRequest, reply: FastifyReply) {
     const status = this.memoryUsage()
 
     reply.code(200)
@@ -10,7 +10,7 @@ const base = async function (request, reply) {
     }
 }
 
-const otpKeys = async function (request, reply) {
+const otpKeys = async function (request: FastifyRequest, reply: FastifyReply) {
     const data = await this.cache.get_pattern("otp*")
 
     reply.code(200)
@@ -21,7 +21,7 @@ const otpKeys = async function (request, reply) {
     }
 }
 
-const redisData = async function (request, reply) {
+const redisData = async function (request: FastifyRequest, reply: FastifyReply) {
     const key = request.body.key
 
     const data = await this.cache.get(key)
@@ -34,7 +34,7 @@ const redisData = async function (request, reply) {
     }
 }
 
-const flushRedis = async function (request, reply) {
+const flushRedis = async function (request: FastifyRequest, reply: FastifyReply) {
     await this.cache.flush_pattern("*")
 
     reply.code(200)
@@ -44,7 +44,7 @@ const flushRedis = async function (request, reply) {
     }
 }
 
-const queueAction = async function (request, reply) {
+const queueAction = async function (request: FastifyRequest, reply: FastifyReply) {
     const action = request.body?.action
 
     switch (action) {

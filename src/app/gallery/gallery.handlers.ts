@@ -8,7 +8,7 @@ import { storage } from "../../config/environment"
 /**
  * * Handler GET /v1/gallery/flush
  */
-const flush = async function (request, reply) {
+const flush = async function (request: FastifyRequest, reply: FastifyReply) {
     await this.cache.flush("gallery:list")
 
     reply.code(200)
@@ -20,7 +20,7 @@ const flush = async function (request, reply) {
 /**
  * * Handler GET /v1/gallery/
  */
-const gallery = async function (request, reply) {
+const gallery = async function (request: FastifyRequest, reply: FastifyReply) {
     const key = "gallery:list"
 
     let data = await this.cache.get(key)
@@ -45,7 +45,7 @@ const gallery = async function (request, reply) {
  * * Handler POST /v1/gallery/upload
  * * will upload or update on key
  */
-const upload = async function (request, reply) {
+const upload = async function (request: FastifyRequest, reply: FastifyReply) {
     const { Key } = request.query
 
     const data = await request.file()
@@ -77,7 +77,7 @@ const upload = async function (request, reply) {
 /**
  * * Handler DELETE /v1/gallery/:key
  */
-const destroy = async function (request, reply) {
+const destroy = async function (request: FastifyRequest, reply: FastifyReply) {
     const { Key } = request.query
 
     await this.s3.send(new DeleteObjectCommand({ Bucket: storage.bucket, Key }))
@@ -93,7 +93,7 @@ const destroy = async function (request, reply) {
 /**
  * * Handler DELETE /v1/gallery/:key
  */
-const destroyMany = async function (request, reply) {
+const destroyMany = async function (request: FastifyRequest, reply: FastifyReply) {
     await this.s3.send(
         new DeleteObjectsCommand({
             Bucket: storage.bucket,

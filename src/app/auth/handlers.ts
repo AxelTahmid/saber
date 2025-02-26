@@ -1,10 +1,11 @@
 import svc from "./service.js"
 import repo from "./repository.js"
+import type { FastifyReply, FastifyRequest } from "fastify"
 
 /**
  * * POST /v1/auth/login
  */
-const login = async function (request, reply) {
+const login = async function (request: FastifyRequest, reply: FastifyReply) {
     await svc.verifyCaptcha(this, request.body.captchaToken)
 
     const token = await svc.authenticate(this, request.body)
@@ -20,7 +21,7 @@ const login = async function (request, reply) {
 /**
  * * POST /v1/auth/register
  */
-const register = async function (request, reply) {
+const register = async function (request: FastifyRequest, reply: FastifyReply) {
     await svc.verifyCaptcha(this, request.body.captchaToken)
 
     const token = await svc.registration(this, request.body)
@@ -36,7 +37,7 @@ const register = async function (request, reply) {
 /**
  * * GET /v1/auth/me
  */
-const me = async function (request, reply) {
+const me = async function (request: FastifyRequest, reply: FastifyReply) {
     const data = await repo.getUserById(this, request.user.id)
 
     reply.code(200)
@@ -51,7 +52,7 @@ const me = async function (request, reply) {
  * * POST /v1/auth/otp-code
  */
 
-const requestOTP = async function (request, reply) {
+const requestOTP = async function (request: FastifyRequest, reply: FastifyReply) {
     await svc.verifyCaptcha(this, request.body.captchaToken)
 
     const email = request.body.email
@@ -68,7 +69,7 @@ const requestOTP = async function (request, reply) {
 /**
  * * POST /v1/auth/verify-email
  */
-const verifyEmail = async function (request, reply) {
+const verifyEmail = async function (request: FastifyRequest, reply: FastifyReply) {
     await svc.verifyCaptcha(this, request.body.captchaToken)
 
     const email = request.user.email
@@ -97,7 +98,7 @@ const verifyEmail = async function (request, reply) {
 /**
  * * POST /v1/auth/reset-password
  */
-const resetPassword = async function (request, reply) {
+const resetPassword = async function (request: FastifyRequest, reply: FastifyReply) {
     await svc.verifyCaptcha(this, request.body.captchaToken)
 
     const { email, password, code } = request.body
