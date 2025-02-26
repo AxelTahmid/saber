@@ -1,16 +1,16 @@
 import { S } from "fluent-json-schema"
 
-export const responseObject = (data) =>
+export const replyObj = (data) =>
     S.object().prop("error", S.boolean().required()).prop("message", S.string().required()).prop("data", data)
 
-export const responseListObject = (data) =>
+export const replyListObj = (data) =>
     S.object()
         .prop("error", S.boolean().required())
         .prop("message", S.string().required())
         .prop("data", S.array().items(data).required())
 
 export const s_paginate = (row_data) =>
-    responseObject(
+    replyObj(
         S.object()
             .prop("total", S.number())
             .prop("per_page", S.number())

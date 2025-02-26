@@ -1,6 +1,6 @@
 import { S } from "fluent-json-schema"
 
-import { responseObject } from "../../config/schema.js"
+import { replyObj } from "../../config/schema.js"
 
 export const userObject = S.object()
     .prop("id", S.number())
@@ -25,21 +25,21 @@ export const resetPassBody = S.object()
  */
 export const loginSchema = {
     body: emailPassObj,
-    response: { 200: responseObject() },
+    response: { 200: replyObj(null) },
 }
 /**
  * * POST /v1/auth/register
  */
 export const registerSchema = {
     body: emailPassObj,
-    response: { 201: responseObject() },
+    response: { 201: replyObj(null) },
 }
 /**
  * * GET /v1/auth/me
  */
 export const meSchema = {
     response: {
-        200: responseObject(userObject),
+        200: replyObj(userObject),
     },
 }
 /**
@@ -51,7 +51,7 @@ export const requestOTPSchema = {
         .prop("captchaToken", S.string().minLength(1).required()),
 
     response: {
-        200: responseObject(),
+        200: replyObj(null),
     },
 }
 /**
@@ -61,14 +61,14 @@ export const verifyEmailSchema = {
     body: S.object()
         .prop("code", S.string().minLength(5).maxLength(6).required())
         .prop("captchaToken", S.string().minLength(1).required()),
-    response: { 201: responseObject(S.object().prop("token", S.string())) },
+    response: { 201: replyObj(S.object().prop("token", S.string())) },
 }
 /**
  * * POST /v1/auth/reset-password
  */
 export const resetPasswordSchema = {
     body: resetPassBody,
-    response: { 201: responseObject(S.object().prop("token", S.string())) },
+    response: { 201: replyObj(S.object().prop("token", S.string())) },
 }
 
 export default {

@@ -1,6 +1,6 @@
 import { S } from "fluent-json-schema"
 
-import { responseObject } from "../../config/schema.js"
+import { replyObj } from "../../config/schema.js"
 
 const contentObj = S.object()
     .prop("Key", S.string())
@@ -19,32 +19,32 @@ const galleryResponseObj = S.object()
  * * Schema GET /v1/gallery/
  */
 const gallery = {
-    response: { 200: responseObject(galleryResponseObj) },
+    response: { 200: replyObj(galleryResponseObj) },
 }
 /**
  * * Schema POST /v1/gallery/upload
  */
 const upload = {
     query: S.object().prop("Key", S.string().required()),
-    response: { 201: responseObject() },
+    response: { 201: replyObj() },
 }
 /**
  * * Schema DELETE /v1/gallery/?Key=keyname
  */
 const destroy = {
     query: S.object().prop("Key", S.string().required()),
-    response: { 201: responseObject() },
+    response: { 201: replyObj() },
 }
 /**
  * * Schema DELETE /v1/gallery/selected
  */
 const destroyMany = {
     body: S.object().prop("Objects", S.array().items(S.object().prop("Key", S.string().required()))),
-    response: { 201: responseObject() },
+    response: { 201: replyObj() },
 }
 
 const flush = {
-    response: { 200: responseObject() },
+    response: { 200: replyObj() },
 }
 
 export default {

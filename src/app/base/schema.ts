@@ -1,5 +1,5 @@
 import { S } from "fluent-json-schema"
-import { responseObject } from "../../config/schema.js"
+import { replyObj } from "../../config/schema.js"
 
 /**
  * * Schema GET /
@@ -26,7 +26,7 @@ export const base = {
  */
 export const arrayofString = {
     response: {
-        200: responseObject(S.array().items(S.string())),
+        200: replyObj(S.array().items(S.string())),
     },
 }
 /**
@@ -35,7 +35,7 @@ export const arrayofString = {
 export const queueAction = {
     body: S.object().prop("action", S.enum(["drain", "clean", "obliterate"]).required()),
     response: {
-        200: responseObject(),
+        200: replyObj(),
     },
 }
 
