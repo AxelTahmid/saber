@@ -2,9 +2,10 @@
 import { ofetch } from "ofetch"
 import conf from "../../config/environment.js"
 import repo from "./repository.js"
+import type { FastifyInstance } from "fastify"
 
 class AuthService {
-    async verifyCaptcha(app, token) {
+    async verifyCaptcha(app: FastifyInstance, token) {
         if (conf.isDevEnvironment) {
             return true
         }
@@ -28,7 +29,7 @@ class AuthService {
         return true
     }
 
-    async authenticate(app, params) {
+    async authenticate(app: FastifyInstance, params) {
         const { email, password } = params || {}
         const key = `timeout:${email}`
         let attempt = await app.cache.get(key)
@@ -48,7 +49,7 @@ class AuthService {
         return await app.auth.token(user)
     }
 
-    async registration(app, params) {
+    async registration(app: FastifyInstance, params) {
         const { email, password } = params || {}
         const hashedPassword = await app.bcrypt.hash(password)
         const userId = await repo.createUser(app, { email, password: hashedPassword })
@@ -60,7 +61,7 @@ class AuthService {
         return await app.auth.token(user)
     }
 
-    async verifyUserEmail(app, email) {
+    async verifyUserEmail(app: FastifyInstance, email) {
         const updatedUser = await repo.updateUserEmailVerified(app, email)
         return await app.auth.token({
             ...updatedUser,
@@ -69,13 +70,13 @@ class AuthService {
         })
     }
 
-    async updateUserPassword(app, params) {
+    async updateUserPassword(app: FastifyInstance, params) {
         const { email, password } = params || {}
         const hashedPassword = await app.bcrypt.hash(password)
         await repo.updateUserPassword(app, { email, password: hashedPassword })
     }
 
-    async getOTP(app, email) {
+    async getOTP(app: FastifyInstance, email) {
         const user = await repo.getUserByEmail(app, email)
         if (!user) throw app.httpErrors.notFound("User not found!")
 
@@ -89,7 +90,7 @@ class AuthService {
         return otp_code
     }
 
-    async verifyOTP(app, params) {
+    async verifyOTP(app: FastifyInstance, params) {
         const key = `otp:${params.email}`
         const otp = await app.redis.get(key)
         if (otp && otp === params.code) {

@@ -1,11 +1,12 @@
+import type { FastifyInstance, RouteOptions } from "fastify"
 import bcrypt from "../../plugins/bcrypt.js"
 
 import auth from "./handlers.js"
 
 import s from "./schemas.js"
 
-export default function routes(app) {
-    app.register(bcrypt)
+function routes(app: FastifyInstance, opts: RouteOptions, done: () => void) {
+    app.register(bcrypt, { saltWorkFactor: 10 })
 
     app.route({
         method: "POST",
@@ -51,3 +52,5 @@ export default function routes(app) {
         handler: auth.resetPassword,
     })
 }
+
+export default routes

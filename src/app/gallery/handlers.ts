@@ -4,7 +4,7 @@
  */
 import { DeleteObjectCommand, DeleteObjectsCommand, ListObjectsCommand, PutObjectCommand } from "@aws-sdk/client-s3"
 
-import { storage } from "../../config/environment"
+import { storage } from "../../config/environment.js"
 /**
  * * Handler GET /v1/gallery/flush
  */

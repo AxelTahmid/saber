@@ -1,7 +1,8 @@
+import type { FastifyInstance } from "fastify"
 import helper from "./handlers.js"
 import schema from "./schema.js"
 
-export default function base(app) {
+export default function base(app: FastifyInstance) {
     app.route({
         method: "GET",
         url: "/",

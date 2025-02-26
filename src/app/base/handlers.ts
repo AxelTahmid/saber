@@ -1,3 +1,5 @@
+import type { FastifyReply, FastifyRequest } from "fastify"
+
 const base = async function (request: FastifyRequest, reply: FastifyReply) {
     const status = this.memoryUsage()
 
