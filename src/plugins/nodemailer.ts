@@ -1,58 +1,85 @@
 /* eslint-disable no-param-reassign, max-len */
-import fp from "fastify-plugin"
-import { createTransport } from "nodemailer"
+import type { FastifyInstance } from "fastify";
+import fp from "fastify-plugin";
+import {
+	createTransport,
+	type TransportOptions,
+	type Transporter,
+} from "nodemailer";
 
-function fastifyMailer(fastify, options, next) {
-    const { defaults, namespace, transport } = options
+type Opts = {
+	transport: Transporter;
+	namespace: string;
+	defaults: TransportOptions;
+};
 
-    if (!transport) {
-        return next(
-            new Error(
-                "You must provide a valid transport configuration object, connection url or a transport plugin instance",
-            ),
-        )
-    }
+function fastifyMailer(
+	fastify: FastifyInstance,
+	options: Opts,
+	next: (err?: Error) => void
+) {
+	const { defaults, namespace, transport } = options;
 
-    let transporter
+	if (!transport) {
+		return next(
+			new Error(
+				"You must provide a valid transport configuration object, connection url or a transport plugin instance"
+			)
+		);
+	}
 
-    try {
-        if (!defaults) {
-            transporter = createTransport(transport)
-        } else {
-            transporter = createTransport(transport, defaults)
-        }
-    } catch (error) {
-        return next(error)
-    }
+	let transporter: Transporter;
 
-    if (namespace) {
-        if (transporter[namespace]) {
-            return next(new Error(`@fastify/nodemailer '${namespace}' is a reserved keyword`))
-        }
+	try {
+		if (!defaults) {
+			transporter = createTransport(transport);
+		} else {
+			transporter = createTransport(transport, defaults);
+		}
+	} catch (error) {
+		return next(error);
+	}
 
-        if (!fastify.mailer) {
-            fastify.decorate("mailer", Object.create(null)).addHook("onClose", (fastify, done) => {
-                fastify.mailer.close(done)
-            })
-        } else if (Object.prototype.hasOwnProperty.call(fastify.mailer, namespace)) {
-            return next(new Error(`@fastify/nodemailer '${namespace}' instance name has already been registered`))
-        }
+	if (namespace) {
+		if (transporter[namespace]) {
+			return next(
+				new Error(`@fastify/nodemailer '${namespace}' is a reserved keyword`)
+			);
+		}
 
-        fastify.mailer[namespace] = transporter
-    } else {
-        if (fastify.mailer) {
-            return next(new Error("@fastify/nodemailer has already been registered"))
-        }
+		if (!fastify.mailer) {
+			fastify
+				.decorate("mailer", Object.create(null))
+				.addHook("onClose", (fastify, done) => {
+					fastify.mailer.close(done);
+				});
+		} else if (
+			Object.prototype.hasOwnProperty.call(fastify.mailer, namespace)
+		) {
+			return next(
+				new Error(
+					`@fastify/nodemailer '${namespace}' instance name has already been registered`
+				)
+			);
+		}
 
-        fastify.decorate("mailer", transporter).addHook("onClose", (fastify, done) => {
-            fastify.mailer.close(done)
-        })
-    }
+		fastify.mailer[namespace] = transporter;
+	} else {
+		if (fastify.mailer) {
+			return next(new Error("@fastify/nodemailer has already been registered"));
+		}
 
-    next()
+		fastify
+			.decorate("mailer", transporter)
+			.addHook("onClose", (fastify, done) => {
+				fastify.mailer.close(done);
+			});
+	}
+
+	next();
 }
 
 export default fp(fastifyMailer, {
-    fastify: ">=4.0.0",
-    name: "@fastify/nodemailer",
-})
+	fastify: ">=4.0.0",
+	name: "@fastify/nodemailer",
+});

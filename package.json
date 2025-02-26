@@ -51,6 +51,8 @@
 		"@biomejs/biome": "1.9.4",
 		"@fastify/type-provider-json-schema-to-ts": "^5.0.0",
 		"@types/node": "^22.13.5",
+		"@types/nodemailer": "^6.4.17",
+		"@types/pg": "^8.11.11",
 		"pino-pretty": "^13.0.0",
 		"tsx": "^4.19.3",
 		"typescript": "^5.7.3"

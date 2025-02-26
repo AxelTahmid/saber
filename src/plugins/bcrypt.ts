@@ -1,24 +1,28 @@
-import * as bcrypt from "bcryptjs"
-import fp from "fastify-plugin"
+import bcrypt from "bcryptjs";
 
-function fastifyBcrypt(fastify, opts, done) {
-    const saltWorkFactor = opts.saltWorkFactor || 10
+import type { FastifyInstance } from "fastify";
+import fp from "fastify-plugin";
 
-    const hash = async (pwd) => bcrypt.hash(pwd, saltWorkFactor)
+function fastifyBcrypt(
+	fastify: FastifyInstance,
+	opts: { saltWorkFactor: number },
+	done: () => void
+) {
+	const saltWorkFactor = opts.saltWorkFactor || 10;
 
-    const compare = async (claim1, claim2) => bcrypt.compare(claim1, claim2)
+	const hash = async (pwd: string) => bcrypt.hash(pwd, saltWorkFactor);
 
-    fastify
-        .decorate("bcrypt", {
-            hash,
-            compare,
-        })
-        .decorateRequest("bcryptHash", hash)
-        .decorateRequest("bcryptCompare", compare)
+	const compare = async (claim1: string, claim2: string) =>
+		bcrypt.compare(claim1, claim2);
 
-    done()
+	fastify.decorate("bcrypt", {
+		hash,
+		compare,
+	});
+
+	done();
 }
 
 export default fp(fastifyBcrypt, {
-    name: "bcrypt",
-})
+	name: "bcrypt",
+});

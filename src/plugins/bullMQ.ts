@@ -1,60 +1,80 @@
-import fp from "fastify-plugin"
+import fp from "fastify-plugin";
 
-import { Queue, Worker } from "bullmq"
+import {
+	Queue,
+	Worker,
+	type WorkerOptions,
+	type DefaultJobOptions,
+} from "bullmq";
 
-import jobProcessor from "../app/mail/index.js"
+import mailProcessor from "@mail/index.js";
 
-async function fastifyBullMQ(fastify, opts) {
-    if (!fastify.queue) {
-        const queue = new Queue(opts.queue, {
-            connection: opts.redis,
-            defaultJobOptions: opts.job_options,
-        })
+import type { FastifyInstance } from "fastify";
 
-        fastify.decorate("queue", queue)
+declare module "fastify" {
+	interface FastifyInstance {
+		queue?: Queue;
+		worker?: Worker;
+	}
+}
 
-        fastify.queue.on("error", (err) => {
-            fastify.log.error({ err }, "Queue Errored Out")
-        })
-    }
+import type { Redis } from "ioredis";
 
-    if (!fastify.worker) {
-        const worker = new Worker(opts.queue, jobProcessor, {
-            connection: opts.redis,
-            ...opts.worker_options,
-            // autorun: false,
-        })
+async function fastifyBullMQ(
+	app: FastifyInstance,
+	opts: {
+		queue: string;
+		redis: Redis;
+		job_options: DefaultJobOptions;
+		worker_options: WorkerOptions | undefined;
+	}
+) {
+	if (!app.queue) {
+		const queue = new Queue(opts.queue, {
+			connection: opts.redis,
+			defaultJobOptions: opts.job_options,
+		});
 
-        fastify.decorate("worker", worker)
+		app.decorate("queue", queue);
+	}
 
-        worker.on("completed", (job, returnvalue) => {
-            fastify.log.info({ job, returnvalue }, "Job Completed")
-        })
+	if (!app.worker) {
+		const worker = new Worker(opts.queue, mailProcessor, {
+			connection: opts.redis,
+			...opts.worker_options,
+			// autorun: false,
+		});
 
-        worker.on("failed", (job, error) => {
-            fastify.log.error({ job, error }, "Job Failed")
-        })
+		app.decorate("worker", worker);
 
-        worker.on("error", (error) => {
-            fastify.log.error({ error }, "Unhandled Exception Thrown by Worker")
-            throw new Error(error)
-        })
+		worker.on("completed", (job, returnvalue) => {
+			app.log.info({ job, returnvalue }, "Job Completed");
+		});
 
-        worker.on("drained", () => {
-            fastify.log.info(`${opts.queue} - is drained, no more jobs left`)
-        })
+		worker.on("failed", (job, error) => {
+			app.log.error({ job, error }, "Job Failed");
+		});
 
-        // worker.run()
+		worker.on("error", (error) => {
+			app.log.error({ error }, "Unhandled Exception Thrown by Worker");
+			throw new Error(error.message);
+		});
 
-        // no needed to close queue, global
-        fastify.addHook("onClose", (fastify, done) => {
-            if (fastify.worker === worker) {
-                fastify.worker.close()
-            }
-        })
-    }
+		worker.on("drained", () => {
+			app.log.info(`${opts.queue} - is drained, no more jobs left`);
+		});
+
+		// worker.run()
+
+		// no needed to close queue, global
+		app.addHook("onClose", (app, done) => {
+			if (app.worker === worker) {
+				app.worker.close();
+			}
+		});
+	}
 }
 
 export default fp(fastifyBullMQ, {
-    name: "bullmq",
-})
+	name: "bullmq",
+});

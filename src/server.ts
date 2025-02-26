@@ -11,12 +11,12 @@ import fastifyRateLimit from "@fastify/rate-limit";
 import fastifySensible from "@fastify/sensible";
 import fastifyUnderPressure from "@fastify/under-pressure";
 import closeWithGrace from "close-with-grace";
-import { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
+import type { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
 
-import routes from "@app/routes.ts";
-import conf from "./config/environment.ts";
-import knexfile from "./database/knexfile.ts";
-import bullMQ from "./plugins/bullMQ.ts";
+import routes from "@app/routes";
+import conf from "./config/environment";
+import knexfile from "./database/knexfile";
+import bullMQ from "./plugins/bullMQ";
 import jwt from "@plugins/jwt";
 import knex from "@plugins/knex";
 import redis from "@plugins/redis";

@@ -2,6 +2,7 @@
 	"include": ["src/**/*.ts"],
 	"exclude": ["node_modules", "test/**/*.ts"],
 	"compilerOptions": {
+		"lib": ["es2020"],
 		"target": "es2024",
 		"module": "NodeNext",
 		"outDir": "dist",
@@ -14,7 +15,14 @@
 		"isolatedModules": true,
 		"noFallthroughCasesInSwitch": true,
 		"forceConsistentCasingInFileNames": true,
-		"typeRoots": ["node", "@types"],
+		"typeRoots": [
+			"node",
+			"@types",
+			"fastify",
+			"bullmq",
+			"@fastify/jwt",
+			"knex"
+		],
 		"baseUrl": "./src",
 		"paths": {
 			"@app/*": ["app/*"],

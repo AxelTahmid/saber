@@ -24,7 +24,7 @@ keys: jwt tls
 tls:
 	@echo "Generating TLS certificates..."
 	cd certs && \
-	openssl req -nodes -newkey rsa:2048 -new -x509 -keyout tls.key -out tls.crt -days 365 \
+	MSYS_NO_PATHCONV=1 openssl req -nodes -newkey rsa:2048 -new -x509 -keyout tls.key -out tls.crt -days 365 \
 	-subj "/C=BD/ST=Dhaka/L=Dhaka/O=Golang/CN=localhost"
 
 # Generate JWT keys
