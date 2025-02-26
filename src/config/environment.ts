@@ -6,7 +6,6 @@ import type { S3ClientConfig } from "@aws-sdk/client-s3"
 import type { FastifyCorsOptions } from "@fastify/cors"
 import type { FastifyMultipartBaseOptions } from "@fastify/multipart"
 import type { FastifyUnderPressureOptions } from "@fastify/under-pressure"
-import type { RateLimitPluginOptions } from "@fastify/rate-limit"
 import type { JobsOptions, WorkerOptions } from "bullmq"
 
 /* ----------------------------------------------------------------------------
@@ -60,7 +59,6 @@ interface AppConfig {
     healthcheck: FastifyUnderPressureOptions
     mailer: MailerConfig
     bullMQ: BullMQConfig
-    rate_limit: RateLimitPluginOptions
 }
 
 /* ----------------------------------------------------------------------------
@@ -193,21 +191,6 @@ const config: AppConfig = {
             },
         },
         queue: process.env.QUEUE_NAME || "mail-queue",
-    },
-    rate_limit: {
-        redis: {
-            host: process.env.REDIS_URL || "127.0.0.1",
-            port: parseNumber(process.env.REDIS_PORT, 6379),
-            connectTimeout: 500,
-            maxRetriesPerRequest: 1,
-        },
-        max: 60,
-        timeWindow: 1000 * 60,
-        nameSpace: "limit:",
-        keyGenerator: (req: FastifyRequest) => {
-            const key = req.headers["x-forwarded-for"] || req.ip
-            return `${key}:${req.routeOptions.url}`
-        },
     },
 }
 

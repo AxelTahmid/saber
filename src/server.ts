@@ -7,7 +7,6 @@ import fastify from "fastify"
 import fastifyCors from "@fastify/cors"
 import fastifyFormbody from "@fastify/formbody"
 import fastifyHelmet from "@fastify/helmet"
-import fastifyRateLimit from "@fastify/rate-limit"
 import fastifySensible from "@fastify/sensible"
 import fastifyUnderPressure from "@fastify/under-pressure"
 import closeWithGrace from "close-with-grace"
@@ -34,8 +33,8 @@ const app = fastify({
     http2: true,
     https: {
         allowHTTP1: true,
-        key: readFileSync(join(__dirname, "certs", "tls.key")),
-        cert: readFileSync(join(__dirname, "certs", "tls.crt")),
+        key: readFileSync(join(__dirname, "..", "certs", "tls.key")),
+        cert: readFileSync(join(__dirname, "..", "certs", "tls.crt")),
     },
     requestTimeout: 120000,
     logger: {
@@ -65,7 +64,6 @@ await app
     .register(fastifyFormbody)
     .register(fastifySensible)
     .register(fastifyUnderPressure, conf.healthcheck)
-    .register(fastifyRateLimit, conf.rate_limit)
     .register(redis, conf.redis)
     .register(jwt)
     .register(bullMQ, conf.bullMQ)

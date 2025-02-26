@@ -1,23 +1,34 @@
-import { S } from "fluent-json-schema"
+import { Type } from "@sinclair/typebox"
 import { replyObj } from "../../config/schema.js"
+
+// In Fluent JSON Schema, none of the properties in baseResponse were marked as required,
+// so they are optional. In TypeBox, we mark them as optional using Type.Optional.
+export const baseResponse = Type.Object({
+    label: Type.Optional(Type.String()),
+    uptime: Type.Optional(Type.Number()),
+    version: Type.Optional(Type.String()),
+    status: Type.Optional(
+        Type.Object({
+            rssBytes: Type.Optional(Type.Number()),
+            heapUsed: Type.Optional(Type.Number()),
+            eventLoopDelay: Type.Optional(Type.Number()),
+            eventLoopUtilized: Type.Optional(Type.Number()),
+        }),
+    ),
+})
+
+// For queueBody, the "action" property is explicitly marked as required,
+// so we leave it as required. We define the enum as a union of literal types.
+export const queueBody = Type.Object({
+    action: Type.Union([Type.Literal("drain"), Type.Literal("clean"), Type.Literal("obliterate")]),
+})
 
 /**
  * * Schema GET /
  */
 export const base = {
     response: {
-        200: S.object()
-            .prop("label", S.string())
-            .prop("uptime", S.number())
-            .prop("version", S.string())
-            .prop(
-                "status",
-                S.object()
-                    .prop("rssBytes", S.number())
-                    .prop("heapUsed", S.number())
-                    .prop("eventLoopDelay", S.number())
-                    .prop("eventLoopUtilized", S.number()),
-            ),
+        200: baseResponse,
     },
 }
 
@@ -26,16 +37,16 @@ export const base = {
  */
 export const arrayofString = {
     response: {
-        200: replyObj(S.array().items(S.string())),
+        200: replyObj(Type.Array(Type.String())),
     },
 }
 /**
  * * Schema POST /queue
  */
 export const queueAction = {
-    body: S.object().prop("action", S.enum(["drain", "clean", "obliterate"]).required()),
+    body: queueBody,
     response: {
-        200: replyObj(),
+        200: replyObj(null),
     },
 }
 
