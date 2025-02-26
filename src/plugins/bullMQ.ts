@@ -18,17 +18,16 @@ declare module "fastify" {
 	}
 }
 
+type BullMQOptions = {
+	queue: string;
+	redis: Redis;
+	job_options: DefaultJobOptions;
+	worker_options: WorkerOptions | undefined;
+};
+
 import type { Redis } from "ioredis";
 
-async function fastifyBullMQ(
-	app: FastifyInstance,
-	opts: {
-		queue: string;
-		redis: Redis;
-		job_options: DefaultJobOptions;
-		worker_options: WorkerOptions | undefined;
-	}
-) {
+async function fastifyBullMQ(app: FastifyInstance, opts: BullMQOptions) {
 	if (!app.queue) {
 		const queue = new Queue(opts.queue, {
 			connection: opts.redis,

@@ -13,13 +13,13 @@ import fastifyUnderPressure from "@fastify/under-pressure";
 import closeWithGrace from "close-with-grace";
 import type { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts";
 
-import routes from "@app/routes";
-import conf from "./config/environment";
-import knexfile from "./database/knexfile";
-import bullMQ from "./plugins/bullMQ";
-import jwt from "@plugins/jwt";
-import knex from "@plugins/knex";
-import redis from "@plugins/redis";
+import routes from "@app/routes.js";
+import conf from "@config/environment.js";
+import knexfile from "@database/knexfile.js";
+import bullMQ from "@plugins/bullMQ.js";
+import jwt from "@plugins/jwt.js";
+import knex from "@plugins/knex.js";
+import redis from "@plugins/redis.js";
 
 // Increase the maximum number of listeners to avoid warnings
 process.setMaxListeners(20);
@@ -95,7 +95,7 @@ const closeListeners = closeWithGrace({ delay: 2000 }, async ({ err }) => {
 	await app.close();
 });
 
-app.addHook("onClose", async (instance, done) => {
+app.addHook("onClose", async (_instance, done) => {
 	closeListeners.uninstall();
 	app.log.info("graceful shutdown -> successful");
 	done();
@@ -103,9 +103,9 @@ app.addHook("onClose", async (instance, done) => {
 
 // Start the server and catch startup errors
 try {
-	await app.listen({
+	app.listen({
+		port: Number(conf.port),
 		host: conf.host,
-		port: conf.port,
 	});
 } catch (err) {
 	app.log.error(err);

@@ -29,7 +29,8 @@
 		"paths": {
 			"@app/*": ["app/*"],
 			"@plugins/*": ["plugins/*"],
-			"@utility/*": ["utility/*"],
+			"@database/*": ["database/*"],
+			"@config/*": ["config/*"],
 			"@auth/*": ["app/auth/*"],
 			"@gallery/*": ["app/gallery/*"],
 			"@mail/*": ["app/mail/*"]
