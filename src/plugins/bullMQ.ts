@@ -76,5 +76,6 @@ async function fastifyBullMQ(
 }
 
 export default fp(fastifyBullMQ, {
+	fastify: ">=5.0.0",
 	name: "bullmq",
 });

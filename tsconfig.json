@@ -21,7 +21,9 @@
 			"fastify",
 			"bullmq",
 			"@fastify/jwt",
-			"knex"
+			"knex",
+			"ioredis",
+			"@aws-sdk/client-s3"
 		],
 		"baseUrl": "./src",
 		"paths": {

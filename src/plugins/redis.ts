@@ -1,107 +1,116 @@
-import fp from "fastify-plugin"
+import fp from "fastify-plugin";
+import type { FastifyInstance } from "fastify";
+import { Redis, type RedisOptions } from "ioredis";
 
-import Redis from "ioredis"
+declare module "fastify" {
+	interface FastifyInstance {
+		redis: Redis;
+		cache: CacheService;
+	}
+}
 
-async function fastifyRedis(fastify, options) {
-    const redis = new Redis(options)
+async function fastifyRedis(
+	fastify: FastifyInstance,
+	options: RedisOptions | string
+) {
+	const redis = new Redis(options as RedisOptions);
 
-    redis.on("connect", () => {
-        fastify.log.info("Redis Connected")
-    })
+	redis.on("connect", () => {
+		fastify.log.info("Redis Connected");
+	});
 
-    redis.on("error", (err) => {
-        fastify.log.error(err, "Redis connection error")
-    })
+	redis.on("error", (err: Error) => {
+		fastify.log.error(err, "Redis connection error");
+	});
 
-    redis.on("close", () => {
-        fastify.log.warn("Redis connection closed")
-    })
+	redis.on("close", () => {
+		fastify.log.warn("Redis connection closed");
+	});
 
-    redis.on("reconnecting", () => {
-        fastify.log.info("Redis attempting to reconnect")
-    })
+	redis.on("reconnecting", () => {
+		fastify.log.info("Redis attempting to reconnect");
+	});
 
-    if (!fastify.redis) {
-        fastify.decorate("redis", redis)
-    }
+	if (!fastify.hasDecorator("redis")) {
+		fastify.decorate("redis", redis);
+	}
 
-    if (!fastify.cache) {
-        fastify.decorate("cache", new CacheService(redis))
-    }
+	if (!fastify.hasDecorator("cache")) {
+		fastify.decorate("cache", new CacheService(redis));
+	}
 
-    fastify.addHook("onClose", async (instance) => {
-        await instance.redis.quit()
-    })
-
-    return redis
+	fastify.addHook("onClose", async (instance) => {
+		await instance.redis.quit();
+	});
 }
 
 export default fp(fastifyRedis, {
-    name: "redis",
-})
+	fastify: ">=5.0.0",
+	name: "redis",
+});
 
 class CacheService {
-    constructor(redis) {
-        this.redis = redis
-    }
+	private redis: Redis;
+	constructor(redis: Redis) {
+		this.redis = redis;
+	}
 
-    async get(key, parse = true) {
-        const data = await this.redis.get(key)
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	async get(key: string, parse = true): Promise<any> {
+		const data = await this.redis.get(key);
+		if (data) {
+			return parse ? JSON.parse(data) : data;
+		}
+		return false;
+	}
 
-        if (data) {
-            return parse ? JSON.parse(data) : data
-        }
+	async set(
+		key: string,
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		data: any,
+		stringify = true,
+		exp = 300
+	): Promise<void> {
+		if (stringify) {
+			await this.redis.set(key, JSON.stringify(data), "EX", exp);
+		} else {
+			await this.redis.set(key, data, "EX", exp);
+		}
+	}
 
-        return false
-    }
+	async flush(keys: string | string[]): Promise<number> {
+		return this.redis.del(Array.isArray(keys) ? keys : [keys]);
+	}
 
-    async set(key, data, stringify = true, exp = 300) {
-        if (stringify) {
-            await this.redis.set(key, JSON.stringify(data), "EX", exp)
-        } else {
-            await this.redis.set(key, data, "EX", exp)
-        }
-    }
+	async flush_pattern(pattern: string): Promise<string> {
+		const stream = this.redis.scanStream({ match: pattern });
+		return new Promise((resolve, reject) => {
+			stream
+				.on("data", (keys: string[] = []) => {
+					if (keys.length) {
+						const pipeline = this.redis.pipeline();
+						keys.forEach((key: string) => pipeline.del(key));
+						pipeline.exec();
+					}
+				})
+				.on("error", (err: Error) => reject(err))
+				.on("end", () => resolve(`Cache cleared on: ${pattern}`));
+		});
+	}
 
-    async flush(keys) {
-        await this.redis.del(keys)
-    }
-
-    async flush_pattern(pattern) {
-        const stream = this.redis.scanStream({
-            match: pattern,
-        })
-
-        return new Promise((resolve, reject) => {
-            stream
-                .on("data", (keys = []) => {
-                    if (keys.length) {
-                        const pipeline = this.redis.pipeline()
-                        keys.forEach((key) => pipeline.del(key))
-                        pipeline.exec()
-                    }
-                })
-                .on("error", (err) => reject(err))
-                .on("end", () => resolve(`Cache cleared on: ${pattern}`))
-        })
-    }
-
-    // * https://stackoverflow.com/questions/54308893/problem-using-ioredis-scanstream-to-scan-through-all-redis-keys
-    async get_pattern(pattern) {
-        const stream = this.redis.scanStream({
-            match: pattern,
-        })
-        // count: 10
-        return new Promise((resolve, reject) => {
-            let keysArray = []
-            stream
-                .on("data", (keys = []) => {
-                    if (keys.length) {
-                        keysArray = [...keys]
-                    }
-                })
-                .on("error", (err) => reject(err))
-                .on("end", () => resolve(keysArray))
-        })
-    }
+	async get_pattern(pattern: string): Promise<string[]> {
+		const stream = this.redis.scanStream({ match: pattern });
+		return new Promise((resolve, reject) => {
+			let keysArray: string[] = [];
+			stream
+				.on("data", (keys: string[] = []) => {
+					if (keys.length) {
+						// Append keys to the array so that all matching keys are captured.
+						keysArray = keysArray.concat(keys);
+					}
+				})
+				.on("error", (err: Error) => reject(err))
+				.on("end", () => resolve(keysArray));
+		});
+	}
 }

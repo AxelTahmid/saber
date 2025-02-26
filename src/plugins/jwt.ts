@@ -129,5 +129,6 @@ const restricted = async (req: FastifyRequest, reply: FastifyReply) => {
 };
 
 export default fp(fastJWT, {
+	fastify: ">=5.0.0",
 	name: "fast-jwt",
 });

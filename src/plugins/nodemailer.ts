@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign, max-len */
 import type { FastifyInstance } from "fastify";
 import fp from "fastify-plugin";
 import {
@@ -7,11 +6,21 @@ import {
 	type Transporter,
 } from "nodemailer";
 
+// Allow transport to be a config object or connection URL.
+// Also, make namespace and defaults optional.
 type Opts = {
-	transport: Transporter;
-	namespace: string;
-	defaults: TransportOptions;
+	transport: string | TransportOptions;
+	namespace?: string;
+	defaults?: TransportOptions;
 };
+
+declare module "fastify" {
+	interface FastifyInstance {
+		// When registered without a namespace, mailer is a Transporter.
+		// When registered with namespaces, mailer is an object mapping string keys to Transporters.
+		mailer: Transporter | Record<string, Transporter>;
+	}
+}
 
 function fastifyMailer(
 	fastify: FastifyInstance,
@@ -31,30 +40,40 @@ function fastifyMailer(
 	let transporter: Transporter;
 
 	try {
-		if (!defaults) {
-			transporter = createTransport(transport);
-		} else {
-			transporter = createTransport(transport, defaults);
-		}
+		transporter = !defaults
+			? createTransport(transport)
+			: createTransport(transport, defaults);
 	} catch (error) {
-		return next(error);
+		return next(error as Error);
 	}
 
 	if (namespace) {
-		if (transporter[namespace]) {
+		// Check if the namespace conflicts with a property on the transporter.
+		if (namespace in transporter) {
 			return next(
 				new Error(`@fastify/nodemailer '${namespace}' is a reserved keyword`)
 			);
 		}
 
-		if (!fastify.mailer) {
-			fastify
-				.decorate("mailer", Object.create(null))
-				.addHook("onClose", (fastify, done) => {
-					fastify.mailer.close(done);
-				});
+		// If no mailer decorator exists, initialize one as an object.
+		if (!fastify.hasDecorator("mailer")) {
+			fastify.decorate("mailer", {} as Record<string, Transporter>);
+			fastify.addHook("onClose", (fastify, done) => {
+				const mailers = fastify.mailer as Record<string, Transporter>;
+				// Iterate over all transporters and close them if possible.
+				for (const key in mailers) {
+					if (
+						Object.prototype.hasOwnProperty.call(mailers, key) &&
+						typeof mailers[key].close === "function"
+					) {
+						mailers[key].close();
+					}
+				}
+				done();
+			});
 		} else if (
-			Object.prototype.hasOwnProperty.call(fastify.mailer, namespace)
+			typeof fastify.mailer === "object" &&
+			namespace in fastify.mailer
 		) {
 			return next(
 				new Error(
@@ -63,23 +82,27 @@ function fastifyMailer(
 			);
 		}
 
-		fastify.mailer[namespace] = transporter;
+		// Register the transporter under the given namespace.
+		(fastify.mailer as Record<string, Transporter>)[namespace] = transporter;
 	} else {
-		if (fastify.mailer) {
+		if (fastify.hasDecorator("mailer")) {
 			return next(new Error("@fastify/nodemailer has already been registered"));
 		}
 
-		fastify
-			.decorate("mailer", transporter)
-			.addHook("onClose", (fastify, done) => {
-				fastify.mailer.close(done);
-			});
+		fastify.decorate("mailer", transporter);
+		fastify.addHook("onClose", (fastify, done) => {
+			const mailer = fastify.mailer as Transporter;
+			if (typeof mailer.close === "function") {
+				mailer.close();
+			}
+			done();
+		});
 	}
 
 	next();
 }
 
 export default fp(fastifyMailer, {
-	fastify: ">=4.0.0",
-	name: "@fastify/nodemailer",
+	fastify: ">=5.0.0",
+	name: "nodemailer",
 });

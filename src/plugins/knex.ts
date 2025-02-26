@@ -109,5 +109,6 @@ const pgErrCodes = {
 };
 
 export default fp(fastifyKnex, {
+	fastify: ">=5.0.0",
 	name: "knex",
 });

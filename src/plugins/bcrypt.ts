@@ -24,5 +24,6 @@ function fastifyBcrypt(
 }
 
 export default fp(fastifyBcrypt, {
+	fastify: ">=5.0.0",
 	name: "bcrypt",
 });
