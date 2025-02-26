@@ -1,4 +1,4 @@
-import type { FastifyInstance } from "fastify"
+import { fastify, type FastifyPluginAsync, type FastifyPluginOptions, type FastifyInstance } from "fastify"
 import conf from "@config/environment.js"
 import fastifyMultipart from "@fastify/multipart"
 
@@ -6,7 +6,7 @@ import s3object from "@plugins/s3object.js"
 import handler from "@gallery/handlers.js"
 import schema from "@gallery/schema.js"
 
-export default function gallery(fastify: FastifyInstance) {
+const routes: FastifyPluginAsync = async (app: FastifyInstance, opts: FastifyPluginOptions) => {
     fastify.register(fastifyMultipart, conf.storage.multer)
 
     const s3credentials = {
@@ -56,3 +56,5 @@ export default function gallery(fastify: FastifyInstance) {
         handler: handler.destroy,
     })
 }
+
+export default routes

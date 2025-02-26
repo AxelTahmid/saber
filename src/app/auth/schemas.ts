@@ -1,74 +1,90 @@
-import { type JSONSchema, S } from "fluent-json-schema"
+import type { FastifySchema } from "fastify"
 
+import { type Static, Type } from "@sinclair/typebox"
 import { replyObj } from "../../config/schema.js"
 
-export const userObject = S.object()
-    .prop("id", S.number())
-    .prop("email", S.string())
-    .prop("email_verified", S.boolean())
-    .prop("role", S.enum(["customer", "admin", "manager"]))
-    .prop("created_at", S.string().format("date"))
-    .prop("updated_at", S.string().format("date")) satisfies JSONSchema
+export const userBody = Type.Object({
+    id: Type.Number(),
+    email: Type.String(),
+    email_verified: Type.Boolean(),
+    role: Type.Union([Type.Literal("customer"), Type.Literal("admin"), Type.Literal("manager")]),
+    created_at: Type.String({ format: "date" }),
+    updated_at: Type.String({ format: "date" }),
+})
+export type User = Static<typeof userBody>
 
-export const emailPassObj = S.object()
-    .prop("email", S.string().minLength(6).maxLength(100).format("email").required())
-    .prop("password", S.string().required())
+export const userLoginBody = Type.Object({
+    email: Type.String({ minLength: 6, maxLength: 100, format: "email" }),
+    password: Type.String(),
+    captchaToken: Type.String({ minLength: 1 }),
+})
+export type UserLogin = Static<typeof userLoginBody>
 
-export const resetPassBody = S.object()
-    .prop("email", S.string().minLength(6).maxLength(100).format("email").required())
-    .prop("password", S.string().required())
-    .prop("code", S.string().minLength(5).maxLength(6).required())
-    .prop("captchaToken", S.string().minLength(1).required())
+export const resetPasswordBody = Type.Object({
+    email: Type.String({ minLength: 6, maxLength: 100, format: "email" }),
+    password: Type.String(),
+    code: Type.String({ minLength: 5, maxLength: 6 }),
+    captchaToken: Type.String({ minLength: 1 }),
+})
+export type ResetPassword = Static<typeof resetPasswordBody>
+
+export const verifyEmailBody = Type.Object({
+    code: Type.String({ minLength: 5, maxLength: 6 }),
+    captchaToken: Type.String({ minLength: 1 }),
+})
+export type VerifyEmail = Static<typeof verifyEmailBody>
+
+export const reqOTPBody = Type.Object({
+    email: Type.String({ minLength: 6, maxLength: 100, format: "email" }),
+    captchaToken: Type.String({ minLength: 1 }),
+})
+export type ReqOTPBody = Static<typeof reqOTPBody>
+
+export const tokenBody = Type.Object({
+    token: Type.String(),
+})
+export type TokenBody = Static<typeof tokenBody>
 
 /**
  * * POST /v1/auth/login
  */
-export const loginSchema = {
-    body: emailPassObj,
+const loginSchema: FastifySchema = {
+    body: userLoginBody,
     response: { 200: replyObj(null) },
 }
 /**
  * * POST /v1/auth/register
  */
-export const registerSchema = {
-    body: emailPassObj,
+const registerSchema: FastifySchema = {
+    body: userLoginBody,
     response: { 201: replyObj(null) },
 }
 /**
  * * GET /v1/auth/me
  */
-export const meSchema = {
-    response: {
-        200: replyObj(userObject),
-    },
+const meSchema: FastifySchema = {
+    response: { 200: replyObj(userBody) },
 }
 /**
  * * GET /v1/auth/me
  */
-export const requestOTPSchema = {
-    body: S.object()
-        .prop("email", S.string().minLength(6).maxLength(100).format("email").required())
-        .prop("captchaToken", S.string().minLength(1).required()),
-
-    response: {
-        200: replyObj(null),
-    },
+const requestOTPSchema: FastifySchema = {
+    body: reqOTPBody,
+    response: { 200: replyObj(null) },
 }
 /**
  * * POST /v1/auth/verify-email
  */
-export const verifyEmailSchema = {
-    body: S.object()
-        .prop("code", S.string().minLength(5).maxLength(6).required())
-        .prop("captchaToken", S.string().minLength(1).required()),
-    response: { 201: replyObj(S.object().prop("token", S.string())) },
+const verifyEmailSchema: FastifySchema = {
+    body: verifyEmailBody,
+    response: { 201: replyObj(tokenBody) },
 }
 /**
  * * POST /v1/auth/reset-password
  */
-export const resetPasswordSchema = {
-    body: resetPassBody,
-    response: { 201: replyObj(S.object().prop("token", S.string())) },
+const resetPasswordSchema: FastifySchema = {
+    body: resetPasswordBody,
+    response: { 201: replyObj(tokenBody) },
 }
 
 export default {

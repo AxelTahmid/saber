@@ -1,11 +1,12 @@
-// authService.js
+import type { FastifyInstance } from "fastify"
 import { ofetch } from "ofetch"
+
 import conf from "../../config/environment.js"
 import repo from "./repository.js"
-import type { FastifyInstance } from "fastify"
+import type { ResetPassword, User, UserLogin } from "./schemas.js"
 
 class AuthService {
-    async verifyCaptcha(app: FastifyInstance, token) {
+    async verifyCaptcha(app: FastifyInstance, token: string) {
         if (conf.isDevEnvironment) {
             return true
         }
@@ -29,7 +30,7 @@ class AuthService {
         return true
     }
 
-    async authenticate(app: FastifyInstance, params) {
+    async authenticate(app: FastifyInstance, params: UserLogin) {
         const { email, password } = params || {}
         const key = `timeout:${email}`
         let attempt = await app.cache.get(key)
@@ -49,7 +50,7 @@ class AuthService {
         return await app.auth.token(user)
     }
 
-    async registration(app: FastifyInstance, params) {
+    async registration(app: FastifyInstance, params: UserLogin) {
         const { email, password } = params || {}
         const hashedPassword = await app.bcrypt.hash(password)
         const userId = await repo.createUser(app, { email, password: hashedPassword })
@@ -58,10 +59,10 @@ class AuthService {
             email,
             email_verified: false,
         }
-        return await app.auth.token(user)
+        return await app.auth.token(user as User)
     }
 
-    async verifyUserEmail(app: FastifyInstance, email) {
+    async verifyUserEmail(app: FastifyInstance, email: string) {
         const updatedUser = await repo.updateUserEmailVerified(app, email)
         return await app.auth.token({
             ...updatedUser,
@@ -70,27 +71,27 @@ class AuthService {
         })
     }
 
-    async updateUserPassword(app: FastifyInstance, params) {
+    async updateUserPassword(app: FastifyInstance, params: ResetPassword) {
         const { email, password } = params || {}
         const hashedPassword = await app.bcrypt.hash(password)
         await repo.updateUserPassword(app, { email, password: hashedPassword })
     }
 
-    async getOTP(app: FastifyInstance, email) {
+    async getOTP(app: FastifyInstance, email: string) {
         const user = await repo.getUserByEmail(app, email)
         if (!user) throw app.httpErrors.notFound("User not found!")
 
         const otp_code = Math.random().toString().substring(2, 8)
         await app.redis.setex(`otp:${email}`, 1800, otp_code)
         app.log.info({ otp_code }, "otp here: ")
-        app.queue.add(`otp-${email}`, {
+        app.queue?.add(`otp-${email}`, {
             action: "otp",
             payload: { email, otp_code },
         })
         return otp_code
     }
 
-    async verifyOTP(app: FastifyInstance, params) {
+    async verifyOTP(app: FastifyInstance, params: { code: string; email: string }) {
         const key = `otp:${params.email}`
         const otp = await app.redis.get(key)
         if (otp && otp === params.code) {

@@ -1,11 +1,11 @@
-import type { FastifyInstance, RouteOptions } from "fastify"
+import type { FastifyInstance, FastifyPluginAsync, FastifyPluginOptions } from "fastify"
 import bcrypt from "../../plugins/bcrypt.js"
 
 import auth from "./handlers.js"
 
 import s from "./schemas.js"
 
-function routes(app: FastifyInstance, opts: RouteOptions, done: () => void) {
+const routes: FastifyPluginAsync = async (app: FastifyInstance, opts: FastifyPluginOptions) => {
     app.register(bcrypt, { saltWorkFactor: 10 })
 
     app.route({

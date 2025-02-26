@@ -11,7 +11,7 @@ import fastifyRateLimit from "@fastify/rate-limit"
 import fastifySensible from "@fastify/sensible"
 import fastifyUnderPressure from "@fastify/under-pressure"
 import closeWithGrace from "close-with-grace"
-import type { JsonSchemaToTsProvider } from "@fastify/type-provider-json-schema-to-ts"
+import type { TypeBoxTypeProvider } from "@fastify/type-provider-typebox"
 
 import routes from "@app/routes.js"
 import conf from "@config/environment.js"
@@ -49,7 +49,7 @@ const app = fastify({
               }
             : undefined,
     },
-}).withTypeProvider<JsonSchemaToTsProvider>()
+}).withTypeProvider<TypeBoxTypeProvider>()
 
 // In development, add localhost regex to CORS origins
 if (conf.isDevEnvironment) {
@@ -89,10 +89,12 @@ await app.register(routes)
 /**
  * Setup graceful shutdown
  */
-const closeListeners = closeWithGrace({ delay: 2000 }, async ({ err }) => {
+const closeListeners = closeWithGrace({ delay: 500 }, async ({ signal, err, manual }) => {
     app.log.info("graceful shutdown -> entered")
     if (err) {
         app.log.error(err)
+    } else {
+        app.log.info(`${signal} received, server closing`)
     }
     await app.close()
 })

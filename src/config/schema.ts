@@ -1,23 +1,32 @@
-import { S } from "fluent-json-schema"
+import { Type } from "@sinclair/typebox"
 
-export const replyObj = (data) =>
-    S.object().prop("error", S.boolean().required()).prop("message", S.string().required()).prop("data", data)
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+export const replyObj = (data: any) =>
+    Type.Object({
+        error: Type.Boolean(),
+        message: Type.String(),
+        data: Type.Optional(data),
+    })
 
-export const replyListObj = (data) =>
-    S.object()
-        .prop("error", S.boolean().required())
-        .prop("message", S.string().required())
-        .prop("data", S.array().items(data).required())
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+export const replyListObj = (data: any) =>
+    Type.Object({
+        error: Type.Boolean(),
+        message: Type.String(),
+        data: Type.Array(data),
+    })
 
-export const s_paginate = (row_data) =>
+// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+export const s_paginate = (row_data: any) =>
     replyObj(
-        S.object()
-            .prop("total", S.number())
-            .prop("per_page", S.number())
-            .prop("offset", S.number())
-            .prop("to", S.number())
-            .prop("last_page", S.number())
-            .prop("current_page", S.number())
-            .prop("from", S.number())
-            .prop("data", S.array().items(row_data)),
+        Type.Object({
+            total: Type.Optional(Type.Number()),
+            per_page: Type.Optional(Type.Number()),
+            offset: Type.Optional(Type.Number()),
+            to: Type.Optional(Type.Number()),
+            last_page: Type.Optional(Type.Number()),
+            current_page: Type.Optional(Type.Number()),
+            from: Type.Optional(Type.Number()),
+            data: Type.Optional(Type.Array(row_data)),
+        }),
     )

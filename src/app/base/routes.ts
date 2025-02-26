@@ -1,8 +1,8 @@
-import type { FastifyInstance } from "fastify"
+import type { FastifyInstance, FastifyPluginAsync, FastifyPluginOptions } from "fastify"
 import helper from "./handlers.js"
 import schema from "./schema.js"
 
-export default function base(app: FastifyInstance) {
+const routes: FastifyPluginAsync = async (app: FastifyInstance, opts: FastifyPluginOptions) => {
     app.route({
         method: "GET",
         url: "/",
@@ -40,3 +40,5 @@ export default function base(app: FastifyInstance) {
         handler: helper.flushRedis,
     })
 }
+
+export default routes

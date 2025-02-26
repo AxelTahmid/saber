@@ -35,6 +35,8 @@
             "ioredis",
             "@aws-sdk/client-s3",
             "fluent-json-schema",
+            "close-with-grace",
+            "@sinclair/typebox",
             "@fastify/cors",
             "@fastify/formbody",
             "@fastify/helmet",

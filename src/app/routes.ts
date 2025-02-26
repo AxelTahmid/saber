@@ -1,8 +1,8 @@
-import type { FastifyInstance, FastifyReply, FastifyRegisterOptions, RouteOptions } from "fastify"
+import type { FastifyInstance, FastifyPluginAsync, FastifyPluginOptions, FastifyReply } from "fastify"
 import authRoutes from "./auth/routes.js"
 import rootRoutes from "./base/routes.js"
 
-export default function routes(app: FastifyInstance, opts: RouteOptions, done: () => void) {
+const routes: FastifyPluginAsync = async (app: FastifyInstance, opts: FastifyPluginOptions) => {
     app.setNotFoundHandler(
         {
             preHandler: app.rateLimit({
@@ -17,5 +17,7 @@ export default function routes(app: FastifyInstance, opts: RouteOptions, done: (
 
     app.register(rootRoutes)
 
-    app.register(authRoutes, { prefix: "/v1/auth" } as FastifyRegisterOptions)
+    app.register(authRoutes, { prefix: "/v1/auth" })
 }
+
+export default routes

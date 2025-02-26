@@ -642,15 +642,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.18.3":
-  version: 7.26.9
-  resolution: "@babel/runtime@npm:7.26.9"
-  dependencies:
-    regenerator-runtime: "npm:^0.14.0"
-  checksum: 10c0/e8517131110a6ec3a7360881438b85060e49824e007f4a64b5dfa9192cf2bb5c01e84bfc109f02d822c7edb0db926928dd6b991e3ee460b483fb0fac43152d9b
-  languageName: node
-  linkType: hard
-
 "@biomejs/biome@npm:1.9.4":
   version: 1.9.4
   resolution: "@biomejs/biome@npm:1.9.4"
@@ -1066,12 +1057,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/type-provider-json-schema-to-ts@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "@fastify/type-provider-json-schema-to-ts@npm:5.0.0"
-  dependencies:
-    json-schema-to-ts: "npm:^3.1.0"
-  checksum: 10c0/dba79072f468dcf607de68a5eca7471734767e9d9d5f18ae196223275f2f8b3cb3d74eabf6305fa3464ad5b6b091fef7f023a570d96517076efb239206bec11f
+"@fastify/type-provider-typebox@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "@fastify/type-provider-typebox@npm:5.1.0"
+  peerDependencies:
+    "@sinclair/typebox": ">=0.26 <=0.34"
+  checksum: 10c0/f5857b25701d7fe4566d405327db87c2d025fc2a090700451e3feb1e8cbcf267d380e0673e32018b6d390fc252a0f77d7a81f134ef497b9c78db9bb9cc96a884
   languageName: node
   linkType: hard
 
@@ -1190,6 +1181,13 @@ __metadata:
   version: 0.11.0
   resolution: "@pkgjs/parseargs@npm:0.11.0"
   checksum: 10c0/5bd7576bb1b38a47a7fc7b51ac9f38748e772beebc56200450c4a817d712232b8f1d3ef70532c80840243c657d491cf6a6be1e3a214cff907645819fdc34aadd
+  languageName: node
+  linkType: hard
+
+"@sinclair/typebox@npm:^0.34.28":
+  version: 0.34.28
+  resolution: "@sinclair/typebox@npm:0.34.28"
+  checksum: 10c0/bc83e8ba45314c0a30393cd12b206abefb3b40121bf5c4e864f71b6f67bc2ff82d565ce0b0bb6ec098055a2c443443ec2896195f02acf0329d4d4fd81bcd7462
   languageName: node
   linkType: hard
 
@@ -2465,8 +2463,9 @@ __metadata:
     "@fastify/multipart": "npm:^9.0.3"
     "@fastify/rate-limit": "npm:^10.2.2"
     "@fastify/sensible": "npm:^6.0.3"
-    "@fastify/type-provider-json-schema-to-ts": "npm:^5.0.0"
+    "@fastify/type-provider-typebox": "npm:^5.1.0"
     "@fastify/under-pressure": "npm:^9.0.3"
+    "@sinclair/typebox": "npm:^0.34.28"
     "@types/node": "npm:^22.13.5"
     "@types/nodemailer": "npm:^6.4.17"
     "@types/pg": "npm:^8.11.11"
@@ -2476,7 +2475,6 @@ __metadata:
     dotenv: "npm:^16.4.7"
     fastify: "npm:^5.2.1"
     fastify-plugin: "npm:^5.0.1"
-    fluent-json-schema: "npm:^5.0.0"
     ioredis: "npm:^5.5.0"
     knex: "npm:^3.1.0"
     nodemailer: "npm:^6.10.0"
@@ -2525,15 +2523,6 @@ __metadata:
     fast-querystring: "npm:^1.0.0"
     safe-regex2: "npm:^4.0.0"
   checksum: 10c0/de869f044ea196493d3d8951e592e8155191cfa7ff56b49ae0aa3b7184e25a19e6931386a0b1ac0ba875648f54430b30c33610045bee0e2d0e5875b9b4fd13fb
-  languageName: node
-  linkType: hard
-
-"fluent-json-schema@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "fluent-json-schema@npm:5.0.0"
-  dependencies:
-    "@fastify/deepmerge": "npm:^2.0.0"
-  checksum: 10c0/d5d8be126c36d30bf8c3ac737dfeca7f9f63ea79cc31582d1f508b84263ae718bd4dadc8106c5b31ddabe918e554eda7e273ac4840412b543a09650a3a4027dd
   languageName: node
   linkType: hard
 
@@ -2825,16 +2814,6 @@ __metadata:
   dependencies:
     dequal: "npm:^2.0.3"
   checksum: 10c0/3ea894d79dd176b4ef31f1a3b7b335447b854780f2bc49af2918de0502d3eabad1889232a7a72c37f1c7ca429acc2eaad940ca5fd25f8ead044d5fecb00e0378
-  languageName: node
-  linkType: hard
-
-"json-schema-to-ts@npm:^3.1.0":
-  version: 3.1.1
-  resolution: "json-schema-to-ts@npm:3.1.1"
-  dependencies:
-    "@babel/runtime": "npm:^7.18.3"
-    ts-algebra: "npm:^2.0.0"
-  checksum: 10c0/609bae04aa5e860a11b6d30ccf41445fae1c7f66fb600c1d170257cf33aa468aa9d03aa046428c3688aff0ff450c2b0c76584b66fa4a5d0da8e33799e4c439a6
   languageName: node
   linkType: hard
 
@@ -3617,13 +3596,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"regenerator-runtime@npm:^0.14.0":
-  version: 0.14.1
-  resolution: "regenerator-runtime@npm:0.14.1"
-  checksum: 10c0/1b16eb2c4bceb1665c89de70dcb64126a22bc8eb958feef3cd68fe11ac6d2a4899b5cd1b80b0774c7c03591dc57d16631a7f69d2daa2ec98100e2f29f7ec4cc4
-  languageName: node
-  linkType: hard
-
 "require-from-string@npm:^2.0.2":
   version: 2.0.2
   resolution: "require-from-string@npm:2.0.2"
@@ -3996,13 +3968,6 @@ __metadata:
   version: 1.0.1
   resolution: "toidentifier@npm:1.0.1"
   checksum: 10c0/93937279934bd66cc3270016dd8d0afec14fb7c94a05c72dc57321f8bd1fa97e5bea6d1f7c89e728d077ca31ea125b78320a616a6c6cd0e6b9cb94cb864381c1
-  languageName: node
-  linkType: hard
-
-"ts-algebra@npm:^2.0.0":
-  version: 2.0.0
-  resolution: "ts-algebra@npm:2.0.0"
-  checksum: 10c0/4ae93bec1bada635bba425854eec323dad50b6ffe86bc04ad2d7f9ce3fb129d673dcf483e19a6e70d07a3a9083e6a0a7f4e004bb8d2164cddc60cc9540ba187f
   languageName: node
   linkType: hard
 
