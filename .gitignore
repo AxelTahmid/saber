@@ -61,3 +61,5 @@ profile*
 *.crt
 *.key
 *.gz
+
+dist

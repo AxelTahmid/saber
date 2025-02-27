@@ -1,7 +1,7 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 
-import type repo from "@auth/repository.js"
-import type svc from "@auth/service.js"
+import type repo from "./repository.js"
+import type svc from "./service.js"
 import type { ReqOTPBody, ResetPassword, UserLogin, VerifyEmail } from "./types.js"
 
 class AuthHandler {

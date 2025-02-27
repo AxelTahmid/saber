@@ -263,7 +263,7 @@ const config: AppConfig = {
         },
         transformSpecificationClone: true,
     },
-}
+} as const
 
 export default config
 

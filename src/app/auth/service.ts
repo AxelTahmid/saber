@@ -74,7 +74,7 @@ class AuthService {
             ...updatedUser,
             email_verified: true,
             role: "customer",
-        })
+        } as User)
     }
 
     public async updateUserPassword(app: FastifyInstance, params: ResetPassword) {
