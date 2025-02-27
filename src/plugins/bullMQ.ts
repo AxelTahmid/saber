@@ -1,7 +1,7 @@
 import fp from "fastify-plugin"
 
-import { Queue, Worker } from "bullmq"
 import type { BullMQConfig } from "@config/environment.js"
+import { Queue, Worker } from "bullmq"
 
 import mailProcessor from "@mail/index.js"
 

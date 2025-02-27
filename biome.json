@@ -10,6 +10,7 @@
         "defaultBranch": "main"
     },
     "files": {
+        "ignoreUnknown": false,
         "ignore": [
             ".yarn/**",
             ".husky/**"
@@ -24,7 +25,8 @@
     },
     "javascript": {
         "formatter": {
-            "semicolons": "asNeeded"
+            "semicolons": "asNeeded",
+            "quoteStyle": "double"
         }
     },
     "linter": {

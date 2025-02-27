@@ -1,14 +1,14 @@
 import "dotenv/config"
-import type { FastifyInstance } from "fastify"
-import { Redis, type RedisOptions } from "ioredis"
-import type { Knex } from "knex"
 import type { S3ClientConfig } from "@aws-sdk/client-s3"
 import type { FastifyCorsOptions } from "@fastify/cors"
 import type { FastifyMultipartBaseOptions } from "@fastify/multipart"
-import type { FastifyUnderPressureOptions } from "@fastify/under-pressure"
-import type { JobsOptions, WorkerOptions } from "bullmq"
 import type { SwaggerOptions } from "@fastify/swagger"
 import type { FastifySwaggerUiOptions } from "@fastify/swagger-ui"
+import type { FastifyUnderPressureOptions } from "@fastify/under-pressure"
+import type { JobsOptions, WorkerOptions } from "bullmq"
+import type { FastifyInstance } from "fastify"
+import { Redis, type RedisOptions } from "ioredis"
+import type { Knex } from "knex"
 
 /* ----------------------------------------------------------------------------
  * Configuration Interfaces

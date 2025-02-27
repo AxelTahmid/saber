@@ -1,11 +1,11 @@
 import "dotenv/config"
 import { readFileSync } from "node:fs"
-import { join, dirname } from "node:path"
+import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 
-import fastify from "fastify"
-import closeWithGrace from "close-with-grace"
 import type { TypeBoxTypeProvider } from "@fastify/type-provider-typebox"
+import closeWithGrace from "close-with-grace"
+import fastify from "fastify"
 
 import routes from "@app/routes.js"
 import conf from "@config/environment.js"

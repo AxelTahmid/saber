@@ -1,10 +1,10 @@
-import type { FastifyPluginAsync, FastifyPluginOptions, FastifyInstance } from "fastify"
 import conf from "@config/environment.js"
 import fastifyMultipart from "@fastify/multipart"
+import type { FastifyInstance, FastifyPluginAsync, FastifyPluginOptions } from "fastify"
 
-import s3object from "@plugins/s3object.js"
 import handler from "@gallery/handlers.js"
 import schema from "@gallery/schema.js"
+import s3object from "@plugins/s3object.js"
 
 const routes: FastifyPluginAsync = async (app: FastifyInstance, opts: FastifyPluginOptions) => {
     app.register(fastifyMultipart, conf.storage.multer)

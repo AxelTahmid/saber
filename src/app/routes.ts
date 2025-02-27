@@ -1,7 +1,7 @@
-import type { FastifyInstance, FastifyPluginAsync, FastifyPluginOptions, FastifyReply } from "fastify"
 import authRoutes from "@app/auth/routes.js"
 import rootRoutes from "@app/base/routes.js"
 import galleryRoutes from "@app/gallery/routes.js"
+import type { FastifyInstance, FastifyPluginAsync, FastifyPluginOptions, FastifyReply } from "fastify"
 
 const routes: FastifyPluginAsync = async (app: FastifyInstance, opts: FastifyPluginOptions) => {
     // Avoid bots crawling urls. No 404, Be smart. Confuse them.

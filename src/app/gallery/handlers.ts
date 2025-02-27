@@ -4,8 +4,8 @@
  */
 import { DeleteObjectCommand, DeleteObjectsCommand, ListObjectsCommand, PutObjectCommand } from "@aws-sdk/client-s3"
 
-import conf from "../../config/environment.js"
 import type { FastifyReply, FastifyRequest } from "fastify"
+import conf from "../../config/environment.js"
 import type { DestroyMany } from "./schema.js"
 /**
  * * Handler GET /v1/gallery/flush

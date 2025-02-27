@@ -1,6 +1,6 @@
 import type { FastifyInstance } from "fastify"
 import fp from "fastify-plugin"
-import { createTransport, type TransportOptions, type Transporter } from "nodemailer"
+import { type TransportOptions, type Transporter, createTransport } from "nodemailer"
 
 // Allow transport to be a config object or connection URL.
 // Also, make namespace and defaults optional.
@@ -62,7 +62,6 @@ function fastifyMailer(fastify: FastifyInstance, options: Opts, next: (err?: Err
         } else if (typeof fastify.mailer === "object" && namespace in fastify.mailer) {
             return next(new Error(`@fastify/nodemailer '${namespace}' instance name has already been registered`))
         }
-
         // Register the transporter under the given namespace.
         ;(fastify.mailer as Record<string, Transporter>)[namespace] = transporter
     } else {

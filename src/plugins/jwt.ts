@@ -1,9 +1,9 @@
-import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 import fastifyJwt from "@fastify/jwt"
+import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 import fp from "fastify-plugin"
 
 import { readFileSync } from "node:fs"
-import { join, dirname } from "node:path"
+import { dirname, join } from "node:path"
 import { fileURLToPath } from "node:url"
 
 type User = {
