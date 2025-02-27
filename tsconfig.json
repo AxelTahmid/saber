@@ -21,10 +21,7 @@
             "@plugins/*": ["plugins/*"],
             "@database/*": ["database/*"],
             "@config/*": ["config/*"],
-            "@auth/*": ["app/auth/*"],
-            "@gallery/*": ["app/gallery/*"],
-            "@mail/*": ["app/mail/*"],
-            "@interfaces/*": ["interfaces/*"]
+            "@queue/*": ["queue/*"]
         },
         "typeRoots": [
             "node",

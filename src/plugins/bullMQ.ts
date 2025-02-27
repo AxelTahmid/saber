@@ -3,7 +3,7 @@ import fp from "fastify-plugin"
 import type { BullMQConfig } from "@config/environment.js"
 import { Queue, Worker } from "bullmq"
 
-import mailProcessor from "@mail/index.js"
+import mailWorker from "@queue/mail.worker.js"
 
 import type { FastifyInstance } from "fastify"
 
@@ -25,7 +25,7 @@ async function fastifyBullMQ(app: FastifyInstance, opts: BullMQConfig) {
     }
 
     if (!app.worker) {
-        const worker = new Worker(opts.queue, mailProcessor, opts.worker_options)
+        const worker = new Worker(opts.queue, mailWorker, opts.worker_options)
 
         app.decorate("worker", worker)
 

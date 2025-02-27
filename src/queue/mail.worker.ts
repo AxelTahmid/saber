@@ -1,8 +1,8 @@
 import { type Transporter, createTransport } from "nodemailer"
-import conf from "../../config/environment.js"
+import conf from "../config/environment.js"
 
 // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-const mail = async (job: any) => {
+const mailWorker = async (job: any) => {
     try {
         const { action, payload } = job.data || null
 
@@ -40,4 +40,4 @@ const mail = async (job: any) => {
     }
 }
 
-export default mail
+export default mailWorker
