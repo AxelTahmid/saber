@@ -8,6 +8,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:${PORT}"
+      - "8000:8000"
     tty: true
     volumes:
       - ".:/app:delegated"
@@ -22,6 +23,7 @@ services:
         condition: service_healthy
     networks:
       - starter
+    restart: always
 
   database:
     image: "postgres:17.4-bookworm"
@@ -44,6 +46,7 @@ services:
       retries: 3
     networks:
       - starter
+    restart: on-failure
 
   redis:
     image: "redis:alpine"
@@ -57,6 +60,7 @@ services:
       retries: 3
     networks:
       - starter
+    restart: on-failure
 
 volumes:
   db_data:

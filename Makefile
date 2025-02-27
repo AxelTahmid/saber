@@ -1,4 +1,4 @@
-.PHONY: check-env tls jwt up down fresh init dev exec-db log log-db db-refresh
+.PHONY: check-env tls keys jwt up down fresh init dev exec-db log log-db db-refresh
 
 # Load .env file if it exists
 ifneq (,$(wildcard ./.env))
@@ -18,11 +18,13 @@ check-env:
 # Certificate and Key Generation
 # ----------------------------------------------------------------------
 
+keys: jwt tls
+
 # Generate self-signed TLS certificates (local development only)
 tls:
 	@echo "Generating TLS certificates..."
 	cd certs && \
-	openssl req -nodes -newkey rsa:2048 -new -x509 -keyout tls.key -out tls.crt -days 365 \
+	MSYS_NO_PATHCONV=1 openssl req -nodes -newkey rsa:2048 -new -x509 -keyout tls.key -out tls.crt -days 365 \
 	-subj "/C=BD/ST=Dhaka/L=Dhaka/O=Golang/CN=localhost"
 
 # Generate JWT keys
@@ -36,8 +38,8 @@ jwt:
 		echo "openssl not found or supported"; \
 	fi; \
 	cd certs && \
-	openssl ecparam -genkey -name prime256v1 -noout -out jwt.pem && \
-	openssl ec -in jwt.pem -pubout -out jwt.pem
+	openssl ecparam -genkey -name prime256v1 -noout -out private.pem && \
+	openssl ec -in private.pem -pubout -out public.pem
 
 # ----------------------------------------------------------------------
 # Docker Management
@@ -68,6 +70,9 @@ init:
 # Development mode: tidy modules, restart containers, and follow logs
 dev: down up log
 
+enter:
+	docker exec -it api sh
+
 # Open a shell in the database container
 exec-db:
 	docker compose exec -it db sh
@@ -82,6 +87,7 @@ log-db:
 # ----------------------------------------------------------------------
 # Database Scripts
 # ----------------------------------------------------------------------
+knex := npx tsx ./node_modules/knex/bin/cli.js --knexfile="$(PWD)/src/database/knexfile"
 
 db-refresh:
 	@GRAY="\033[1;36m"; \
@@ -97,13 +103,13 @@ db-refresh:
 	echo -e "$$GREEN*************************************************"; \
 	echo -e "*  Rolling Back Migrations if Exists           *"; \
 	echo -e "*************************************************$$NC"; \
-	npx knex migrate:rollback --all --knexfile "$(PWD)/database/knexfile" --verbose; \
+	$(knex) migrate:rollback --all --verbose; \
 	echo -e "$$GREEN*************************************************"; \
 	echo -e "*  Migrating Tables                            *"; \
 	echo -e "*************************************************$$NC"; \
-	npx knex migrate:latest --knexfile "$(PWD)/database/knexfile" --verbose; \
+	$(knex) migrate:latest --verbose; \
 	echo -e "$$GREEN*************************************************"; \
 	echo -e "*  Seeding Tables                              *"; \
 	echo -e "*************************************************$$NC"; \
-	npx knex seed:run --knexfile "$(PWD)/database/knexfile" --verbose
+	$(knex) seed:run --verbose
 
