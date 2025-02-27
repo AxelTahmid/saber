@@ -4,11 +4,6 @@ import { join, dirname } from "node:path"
 import { fileURLToPath } from "node:url"
 
 import fastify from "fastify"
-import fastifyCors from "@fastify/cors"
-import fastifyFormbody from "@fastify/formbody"
-import fastifyHelmet from "@fastify/helmet"
-import fastifySensible from "@fastify/sensible"
-import fastifyUnderPressure from "@fastify/under-pressure"
 import closeWithGrace from "close-with-grace"
 import type { TypeBoxTypeProvider } from "@fastify/type-provider-typebox"
 
@@ -19,7 +14,6 @@ import bullMQ from "@plugins/bullMQ.js"
 import jwt from "@plugins/jwt.js"
 import knex from "@plugins/knex.js"
 import redis from "@plugins/redis.js"
-import fastifySwagger from "@fastify/swagger"
 
 // Increase the maximum number of listeners to avoid warnings
 process.setMaxListeners(20)
@@ -60,22 +54,21 @@ if (conf.isDevEnvironment) {
 
 // Register plugins
 await app
-    .register(fastifyHelmet, { global: true })
-    .register(fastifyCors, conf.cors)
-    .register(fastifyFormbody)
-    .register(fastifySensible)
-    .register(fastifyUnderPressure, conf.healthcheck)
+    .register(import("@fastify/helmet"), { global: true })
+    .register(import("@fastify/cors"), conf.cors)
+    .register(import("@fastify/formbody"))
+    .register(import("@fastify/sensible"))
+    .register(import("@fastify/under-pressure"), conf.healthcheck)
     .register(redis, conf.redis)
     .register(jwt)
     .register(bullMQ, conf.bullMQ)
-    .register(fastifySwagger, conf.swagger)
 
 if (conf.isDevEnvironment) {
-    /**
-     * Database registration
-     */
-    app.log.info("using development database")
-    await app.register(knex, knexfile.development)
+    app.log.info("db: development")
+    await app
+        .register(knex, knexfile.development)
+        .register(import("@fastify/swagger"), conf.swagger)
+        .register(import("@fastify/swagger-ui"), conf.swaggerUI)
 } else {
     app.log.info("db: production")
     await app.register(knex, conf.sql)
@@ -104,6 +97,8 @@ app.addHook("onClose", async (_instance) => {
     app.log.info("graceful shutdown -> successful")
 })
 
+await app.ready()
+
 // Start the server and catch startup errors
 try {
     await app.listen({
@@ -114,6 +109,3 @@ try {
     app.log.error(err)
     process.exit(1)
 }
-
-await app.ready()
-app.swagger()

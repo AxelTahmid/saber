@@ -8,7 +8,6 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3000:${PORT}"
-      - "8000:8000"
     tty: true
     volumes:
       - ".:/app:delegated"

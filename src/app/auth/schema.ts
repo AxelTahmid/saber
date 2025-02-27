@@ -49,13 +49,15 @@ export type TokenBody = Static<typeof tokenBody>
  * * POST /v1/auth/login
  */
 const loginSchema: FastifySchema = {
+    description: "Login existing user",
+    tags: ["auth"],
     body: userLoginBody,
     response: { 200: replyObj(null) },
 }
-/**
- * * POST /v1/auth/register
- */
+
 const registerSchema: FastifySchema = {
+    description: "Register new user",
+    tags: ["auth"],
     body: userLoginBody,
     response: { 201: replyObj(null) },
 }
@@ -63,12 +65,16 @@ const registerSchema: FastifySchema = {
  * * GET /v1/auth/me
  */
 const meSchema: FastifySchema = {
+    description: "Fetch user information",
+    tags: ["auth"],
     response: { 200: replyObj(userBody) },
 }
 /**
  * * GET /v1/auth/me
  */
 const requestOTPSchema: FastifySchema = {
+    description: "Request One Time Password (OTP) for user",
+    tags: ["auth"],
     body: reqOTPBody,
     response: { 200: replyObj(null) },
 }
@@ -76,6 +82,8 @@ const requestOTPSchema: FastifySchema = {
  * * POST /v1/auth/verify-email
  */
 const verifyEmailSchema: FastifySchema = {
+    description: "Verify user email",
+    tags: ["auth"],
     body: verifyEmailBody,
     response: { 201: replyObj(tokenBody) },
 }
@@ -83,6 +91,8 @@ const verifyEmailSchema: FastifySchema = {
  * * POST /v1/auth/reset-password
  */
 const resetPasswordSchema: FastifySchema = {
+    description: "Reset user password",
+    tags: ["auth"],
     body: resetPasswordBody,
     response: { 201: replyObj(tokenBody) },
 }

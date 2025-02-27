@@ -27,12 +27,16 @@ export type DestroyMany = Static<typeof destroyManyBody>
  * * Schema GET /v1/gallery/
  */
 const gallery = {
+    description: "List gallery images",
+    tags: ["gallery"],
     response: { 200: replyObj(galleryResponseObj) },
 }
 /**
  * * Schema POST /v1/gallery/upload
  */
 const upload = {
+    description: "Upload a gallery image",
+    tags: ["gallery"],
     query: KeyQueryParam,
     response: { 201: replyObj(null) },
 }
@@ -40,6 +44,8 @@ const upload = {
  * * Schema DELETE /v1/gallery/?Key=keyname
  */
 const destroy = {
+    description: "Delete a gallery image",
+    tags: ["gallery"],
     query: KeyQueryParam,
     response: { 201: replyObj(null) },
 }
@@ -47,11 +53,15 @@ const destroy = {
  * * Schema DELETE /v1/gallery/selected
  */
 const destroyMany = {
+    description: "Delete multiple gallery image",
+    tags: ["gallery"],
     body: destroyManyBody,
     response: { 201: replyObj(null) },
 }
 
 const flush = {
+    description: "Flush redis cache of images",
+    tags: ["gallery"],
     response: { 200: replyObj(null) },
 }
 

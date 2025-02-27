@@ -9,6 +9,7 @@ This is a fastify typescript starter template with some batteries included:
 - Global Error Handler with formatted response
 - S3 / Object Storage Adapter
 - Performant linting & formatting using rust based `Biome`
+- OpenAPI 3.1 Doc Generation
 
 ## Project Structure
 

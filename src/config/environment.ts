@@ -8,6 +8,7 @@ import type { FastifyMultipartBaseOptions } from "@fastify/multipart"
 import type { FastifyUnderPressureOptions } from "@fastify/under-pressure"
 import type { JobsOptions, WorkerOptions } from "bullmq"
 import type { SwaggerOptions } from "@fastify/swagger"
+import type { FastifySwaggerUiOptions } from "@fastify/swagger-ui"
 
 /* ----------------------------------------------------------------------------
  * Configuration Interfaces
@@ -61,6 +62,7 @@ interface AppConfig {
     mailer: MailerConfig
     bullMQ: BullMQConfig
     swagger: SwaggerOptions
+    swaggerUI: FastifySwaggerUiOptions
 }
 
 /* ----------------------------------------------------------------------------
@@ -200,23 +202,27 @@ const config: AppConfig = {
         queue: process.env.QUEUE_NAME || "mail-queue",
     },
     swagger: {
-        hideUntagged: true,
+        // swagger: {},
+        // hideUntagged: true,
+        // routePrefix: "/docs",
+        // exposeRoute: true,
         openapi: {
             openapi: "3.1.0",
             info: {
-                title: "Test swagger",
-                description: "Testing the Fastify swagger API",
+                title: "FastifyStarter",
+                description: "Starter swagger API",
                 version: "0.1.0",
             },
             servers: [
                 {
-                    url: "http://0.0.0.0:8000",
+                    url: "https://localhost:3000",
                     description: "Development server",
                 },
             ],
             tags: [
-                { name: "user", description: "User related end-points" },
-                { name: "code", description: "Code related end-points" },
+                { name: "auth", description: "Auth related end-points" },
+                { name: "base", description: "Root end-points" },
+                { name: "gallery", description: "Gallery related end-points" },
             ],
             components: {
                 securitySchemes: {
@@ -232,6 +238,30 @@ const config: AppConfig = {
                 description: "Find more info here",
             },
         },
+    },
+    swaggerUI: {
+        routePrefix: "/docs",
+        uiConfig: {
+            docExpansion: "list",
+            deepLinking: false,
+            displayRequestDuration: true,
+        },
+        // preauthorizeBasic: (authDefinitionKey, username, password) => action
+        uiHooks: {
+            onRequest: (request, reply, next) => {
+                next()
+            },
+            preHandler: (request, reply, next) => {
+                next()
+            },
+        },
+        staticCSP: true,
+        transformStaticCSP: (header) => header,
+        transformSpecification: (swaggerObject, req, reply) => {
+            const updatedSwaggerObject = { ...swaggerObject, host: req.hostname }
+            return updatedSwaggerObject
+        },
+        transformSpecificationClone: true,
     },
 }
 

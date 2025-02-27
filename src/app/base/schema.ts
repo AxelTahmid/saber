@@ -28,6 +28,8 @@ export type QueueBody = Static<typeof queueBody>
  * * Schema GET /
  */
 export const base = {
+    description: "Health status of application",
+    tags: ["base"],
     response: {
         200: baseResponse,
     },
@@ -37,6 +39,8 @@ export const base = {
  * * Schema GET /otp
  */
 export const arrayofString = {
+    description: "Get OTP codes in circulation",
+    tags: ["base"],
     response: {
         200: replyObj(Type.Array(Type.String())),
     },
@@ -45,6 +49,8 @@ export const arrayofString = {
  * * Schema POST /queue
  */
 export const queueAction = {
+    description: "Perform action on queue, i.e. Drain etc",
+    tags: ["base"],
     body: queueBody,
     response: {
         200: replyObj(null),
