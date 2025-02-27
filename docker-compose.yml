@@ -1,5 +1,5 @@
 services:
-  app:
+  api:
     container_name: "api"
     env_file: .env
     build:
