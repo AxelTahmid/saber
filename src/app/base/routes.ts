@@ -1,43 +1,45 @@
 import type { FastifyInstance, FastifyPluginAsync, FastifyPluginOptions } from "fastify"
-import handler from "./handlers.js"
-import schema from "./schema.js"
+import BaseHandler from "./handlers.js"
+import { RouteSchema } from "./schema.js"
 
 const routes: FastifyPluginAsync = async (app: FastifyInstance, opts: FastifyPluginOptions) => {
+    const baseHandler = new BaseHandler(app)
+
     app.route({
         method: "GET",
         url: "/",
-        schema: schema.base,
-        handler: handler.base,
+        schema: RouteSchema.base,
+        handler: baseHandler.base,
     })
 
     app.route({
         method: "POST",
         url: "/otp",
         onRequest: app.role.restricted,
-        schema: schema.arrayofString,
-        handler: handler.otpKeys,
+        schema: RouteSchema.arrayofString,
+        handler: baseHandler.otpKeys,
     })
 
     app.route({
         method: "POST",
         url: "/redis",
         onRequest: app.role.restricted,
-        handler: handler.redisData,
+        handler: baseHandler.redisData,
     })
 
     app.route({
         method: "POST",
         url: "/queue",
         onRequest: app.role.restricted,
-        schema: schema.queueAction,
-        handler: handler.queueAction,
+        schema: RouteSchema.queueAction,
+        handler: baseHandler.queueAction,
     })
 
     app.route({
         method: "POST",
         url: "/flush",
         onRequest: app.role.restricted,
-        handler: handler.flushRedis,
+        handler: baseHandler.flushRedis,
     })
 }
 

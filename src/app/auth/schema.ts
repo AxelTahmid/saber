@@ -9,10 +9,10 @@ const Email = Type.String({ minLength: 6, maxLength: 100, format: "email" })
 const CaptchaToken = Type.String({ minLength: 1 })
 const Role = Type.Union([Type.Literal("customer"), Type.Literal("admin"), Type.Literal("manager")])
 
-/* ---------------------------------------------
-    Data Schemas
---------------------------------------------- */
 export namespace Data {
+    /* ---------------------------------------------
+        Data Schemas
+    --------------------------------------------- */
     export const userBody = Type.Object({
         id: Type.Number(),
         email: Email, // original user email schema (less strict)
