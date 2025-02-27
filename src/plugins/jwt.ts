@@ -3,7 +3,8 @@ import fastifyJwt from "@fastify/jwt"
 import fp from "fastify-plugin"
 
 import { readFileSync } from "node:fs"
-import { join } from "node:path"
+import { join, dirname } from "node:path"
+import { fileURLToPath } from "node:url"
 
 type User = {
     id: number
@@ -18,6 +19,9 @@ enum Roles {
     MANAGER = "manager",
     CUSTOMER = "customer",
 }
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
 /**
  * * All JWT features including roles

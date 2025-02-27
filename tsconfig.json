@@ -44,17 +44,8 @@
             "@fastify/multipart",
             "@fastify/rate-limit",
             "@fastify/sensible",
-            "@fastify/under-pressure"
+            "@fastify/under-pressure",
+            "openapi-types"
         ]
-    },
-    // for knex cli migrations
-    // "ts-node": {
-    //     "experimentalSpecifierResolution": "node",
-    //     "require": ["dotenv/config"],
-    //     "typeCheck": false,
-    //     "files": true,
-    //     "esm": true,
-    //     "swc": true,
-    //     "ignore": ["(?:^|/)node_modules/", "(?:^|/)\\.next/", ".yarn/*"]
-    // }
+    }
 }

@@ -3,7 +3,6 @@ import type { Knex } from "knex"
 /**
  * @param { import("knex").Knex } knex
  * @returns { Promise<void> }
- * * npx knex seed:run --specific=users_table_data.js
  */
 export async function seed(knex: Knex): Promise<void> {
     // pass is 123456

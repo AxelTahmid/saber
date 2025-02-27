@@ -1046,6 +1046,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fastify/swagger@npm:^9.4.2":
+  version: 9.4.2
+  resolution: "@fastify/swagger@npm:9.4.2"
+  dependencies:
+    fastify-plugin: "npm:^5.0.0"
+    json-schema-resolver: "npm:^3.0.0"
+    openapi-types: "npm:^12.1.3"
+    rfdc: "npm:^1.3.1"
+    yaml: "npm:^2.4.2"
+  checksum: 10c0/a23c1ff72c2c7b3323ac11afbb80e5086cf8e284967bf75e8e95278a09c3bf176c2ceab2ff481d6bfc6aff1dfda26eba807dfe196fde19d9e4b8ed5baa03c584
+  languageName: node
+  linkType: hard
+
 "@fastify/type-provider-typebox@npm:^5.1.0":
   version: 5.1.0
   resolution: "@fastify/type-provider-typebox@npm:5.1.0"
@@ -1950,9 +1963,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bullmq@npm:^5.41.5":
-  version: 5.41.5
-  resolution: "bullmq@npm:5.41.5"
+"bullmq@npm:^5.41.7":
+  version: 5.41.7
+  resolution: "bullmq@npm:5.41.7"
   dependencies:
     cron-parser: "npm:^4.9.0"
     ioredis: "npm:^5.4.1"
@@ -1961,7 +1974,7 @@ __metadata:
     semver: "npm:^7.5.4"
     tslib: "npm:^2.0.0"
     uuid: "npm:^9.0.0"
-  checksum: 10c0/a71420c8004750282db732375226c77f20ddb33926c734817bd95ba155259c2f58cbabe71379ee9a0afbac67a5afad31fd0cfcf892c2c1e71f98a006968b1534
+  checksum: 10c0/4231de9e877629da9518ec57c88352c305b05d4a9d685a37fb9ded3d992f528f76494327105dbd8b4a7e4dec9c4596f6d243eb01175b6232e39dc9a95a186c1a
   languageName: node
   linkType: hard
 
@@ -2077,7 +2090,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:4, debug@npm:^4.3.4":
+"debug@npm:4, debug@npm:^4.1.1, debug@npm:^4.3.4":
   version: 4.4.0
   resolution: "debug@npm:4.4.0"
   dependencies:
@@ -2382,7 +2395,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-uri@npm:^3.0.0, fast-uri@npm:^3.0.1":
+"fast-uri@npm:^3.0.0, fast-uri@npm:^3.0.1, fast-uri@npm:^3.0.5":
   version: 3.0.6
   resolution: "fast-uri@npm:3.0.6"
   checksum: 10c0/74a513c2af0584448aee71ce56005185f81239eab7a2343110e5bad50c39ad4fb19c5a6f99783ead1cac7ccaf3461a6034fda89fffa2b30b6d99b9f21c2f9d29
@@ -2451,6 +2464,7 @@ __metadata:
     "@fastify/jwt": "npm:^9.0.4"
     "@fastify/multipart": "npm:^9.0.3"
     "@fastify/sensible": "npm:^6.0.3"
+    "@fastify/swagger": "npm:^9.4.2"
     "@fastify/type-provider-typebox": "npm:^5.1.0"
     "@fastify/under-pressure": "npm:^9.0.3"
     "@sinclair/typebox": "npm:^0.34.28"
@@ -2458,7 +2472,7 @@ __metadata:
     "@types/nodemailer": "npm:^6.4.17"
     "@types/pg": "npm:^8.11.11"
     bcryptjs: "npm:^3.0.2"
-    bullmq: "npm:^5.41.5"
+    bullmq: "npm:^5.41.7"
     close-with-grace: "npm:^2.2.0"
     dotenv: "npm:^16.4.7"
     fastify: "npm:^5.2.1"
@@ -2802,6 +2816,17 @@ __metadata:
   dependencies:
     dequal: "npm:^2.0.3"
   checksum: 10c0/3ea894d79dd176b4ef31f1a3b7b335447b854780f2bc49af2918de0502d3eabad1889232a7a72c37f1c7ca429acc2eaad940ca5fd25f8ead044d5fecb00e0378
+  languageName: node
+  linkType: hard
+
+"json-schema-resolver@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "json-schema-resolver@npm:3.0.0"
+  dependencies:
+    debug: "npm:^4.1.1"
+    fast-uri: "npm:^3.0.5"
+    rfdc: "npm:^1.1.4"
+  checksum: 10c0/f84edefb65da8833ee5949415abf599ebe18bec82ebf8f154b3565490552eaf1d9c6389d7310e5cdb611a21e655baaf20025f005c9222885ab69a092afd3f011
   languageName: node
   linkType: hard
 
@@ -3236,6 +3261,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"openapi-types@npm:^12.1.3":
+  version: 12.1.3
+  resolution: "openapi-types@npm:12.1.3"
+  checksum: 10c0/4ad4eb91ea834c237edfa6ab31394e87e00c888fc2918009763389c00d02342345195d6f302d61c3fd807f17723cd48df29b47b538b68375b3827b3758cd520f
+  languageName: node
+  linkType: hard
+
 "p-map@npm:^7.0.2":
   version: 7.0.3
   resolution: "p-map@npm:7.0.3"
@@ -3652,7 +3684,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rfdc@npm:^1.2.0, rfdc@npm:^1.3.1":
+"rfdc@npm:^1.1.4, rfdc@npm:^1.2.0, rfdc@npm:^1.3.1":
   version: 1.4.1
   resolution: "rfdc@npm:1.4.1"
   checksum: 10c0/4614e4292356cafade0b6031527eea9bc90f2372a22c012313be1dcc69a3b90c7338158b414539be863fa95bfcb2ddcd0587be696841af4e6679d85e62c060c7
@@ -4129,5 +4161,14 @@ __metadata:
   version: 5.0.0
   resolution: "yallist@npm:5.0.0"
   checksum: 10c0/a499c81ce6d4a1d260d4ea0f6d49ab4da09681e32c3f0472dee16667ed69d01dae63a3b81745a24bd78476ec4fcf856114cb4896ace738e01da34b2c42235416
+  languageName: node
+  linkType: hard
+
+"yaml@npm:^2.4.2":
+  version: 2.7.0
+  resolution: "yaml@npm:2.7.0"
+  bin:
+    yaml: bin.mjs
+  checksum: 10c0/886a7d2abbd70704b79f1d2d05fe9fb0aa63aefb86e1cb9991837dced65193d300f5554747a872b4b10ae9a12bc5d5327e4d04205f70336e863e35e89d8f4ea9
   languageName: node
   linkType: hard

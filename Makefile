@@ -70,6 +70,9 @@ init:
 # Development mode: tidy modules, restart containers, and follow logs
 dev: down up log
 
+enter:
+	docker exec -it api sh
+
 # Open a shell in the database container
 exec-db:
 	docker compose exec -it db sh
