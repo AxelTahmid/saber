@@ -1,8 +1,10 @@
+import type { Knex } from "knex"
+
 /**
  * @param { import("knex").Knex } knex
- * @returns { Promise<void> }
+ * @returns {  Promise<Knex.SchemaBuilder>  }
  */
-export const up = async (knex) => {
+export async function up(knex: Knex): Promise<Knex.SchemaBuilder> {
     // Create the auth_users table
     await knex.schema.createTable("auth_users", (table) => {
         table.specificType("id", "INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY")
@@ -32,9 +34,9 @@ export const up = async (knex) => {
 
 /**
  * @param { import("knex").Knex } knex
- * @returns { Promise<void> }
+ * @returns {  Promise<Knex.SchemaBuilder>  }
  */
-export const down = async (knex) => {
+export async function down(knex: Knex): Promise<Knex.SchemaBuilder> {
     // Drop the enum type, trigger, and table
     await knex.raw("DROP TYPE IF EXISTS role_type CASCADE;")
     await knex.raw("DROP TRIGGER IF EXISTS set_auth_user_updated_at ON auth_users;")

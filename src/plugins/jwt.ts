@@ -3,11 +3,7 @@ import fastifyJwt from "@fastify/jwt"
 import fp from "fastify-plugin"
 
 import { readFileSync } from "node:fs"
-import { dirname, join } from "node:path"
-import { fileURLToPath } from "node:url"
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
+import { join } from "node:path"
 
 type User = {
     id: number

@@ -96,14 +96,19 @@ const config: AppConfig = {
     },
     sql: {
         client: "pg",
+        connection: process.env.DB_URL,
         searchPath: ["knex", "public"],
-        acquireConnectionTimeout: 10000,
-        connection: process.env.DB_URL || "",
+        acquireConnectionTimeout: 30000, // 30 seconds
+        createTimeoutMillis: 5000, // 5 seconds
+        idleTimeoutMillis: 30000, // 30 seconds
+        reapIntervalMillis: 5000,
+        createRetryIntervalMillis: 200, // 0.2 seconds
+        propagateCreateError: false,
         pool: {
             min: 1,
-            max: 50,
+            max: 10,
         },
-    },
+    } as Knex.Config,
     storage: {
         multer: {
             limits: {

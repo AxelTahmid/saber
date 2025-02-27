@@ -23,10 +23,6 @@ import redis from "@plugins/redis.js"
 // Increase the maximum number of listeners to avoid warnings
 process.setMaxListeners(20)
 
-// Compute __dirname for ESM modules
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
-
 const logconf = {
     target: "pino-pretty",
     options: {
