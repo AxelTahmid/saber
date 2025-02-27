@@ -2,11 +2,17 @@ import type { FastifyInstance } from "fastify"
 import { ofetch } from "ofetch"
 
 import conf from "../../config/environment.js"
-import repo from "./repository.js"
-import type { ResetPassword, User, UserLogin } from "./schema.js"
+import type AuthRepository from "./repository.js"
+import type { ResetPassword, User, UserLogin } from "./types.js"
 
 class AuthService {
-    async verifyCaptcha(app: FastifyInstance, token: string) {
+    private repo: AuthRepository
+
+    constructor(repo: AuthRepository) {
+        this.repo = repo
+    }
+
+    public async verifyCaptcha(app: FastifyInstance, token: string) {
         if (conf.isDevEnvironment) {
             return true
         }
@@ -30,7 +36,7 @@ class AuthService {
         return true
     }
 
-    async authenticate(app: FastifyInstance, params: UserLogin) {
+    public async authenticate(app: FastifyInstance, params: UserLogin) {
         const { email, password } = params || {}
         const key = `timeout:${email}`
         let attempt = await app.cache.get(key)
@@ -38,7 +44,7 @@ class AuthService {
             throw app.httpErrors.forbidden("5 Wrong Attempts! Try again in 5 minutes.")
         }
 
-        const user = await repo.getUserByEmail(app, email)
+        const user = await this.repo.getUserByEmail(email)
         if (!user) throw app.httpErrors.notFound(`User: ${email}, not found!`)
 
         const match = await app.bcrypt.compare(password, user.password)
@@ -50,10 +56,10 @@ class AuthService {
         return await app.auth.token(user)
     }
 
-    async registration(app: FastifyInstance, params: UserLogin) {
+    public async registration(app: FastifyInstance, params: UserLogin) {
         const { email, password } = params || {}
         const hashedPassword = await app.bcrypt.hash(password)
-        const userId = await repo.createUser(app, { email, password: hashedPassword })
+        const userId = await this.repo.createUser({ email, password: hashedPassword })
         const user = {
             id: userId,
             email,
@@ -62,8 +68,8 @@ class AuthService {
         return await app.auth.token(user as User)
     }
 
-    async verifyUserEmail(app: FastifyInstance, email: string) {
-        const updatedUser = await repo.updateUserEmailVerified(app, email)
+    public async verifyUserEmail(app: FastifyInstance, email: string) {
+        const updatedUser = await this.repo.updateUserEmailVerified(email)
         return await app.auth.token({
             ...updatedUser,
             email_verified: true,
@@ -71,14 +77,14 @@ class AuthService {
         })
     }
 
-    async updateUserPassword(app: FastifyInstance, params: ResetPassword) {
+    public async updateUserPassword(app: FastifyInstance, params: ResetPassword) {
         const { email, password } = params || {}
         const hashedPassword = await app.bcrypt.hash(password)
-        await repo.updateUserPassword(app, { email, password: hashedPassword })
+        await this.repo.updateUserPassword({ email, password: hashedPassword })
     }
 
-    async getOTP(app: FastifyInstance, email: string) {
-        const user = await repo.getUserByEmail(app, email)
+    public async getOTP(app: FastifyInstance, email: string) {
+        const user = await this.repo.getUserByEmail(email)
         if (!user) throw app.httpErrors.notFound("User not found!")
 
         const otp_code = Math.random().toString().substring(2, 8)
@@ -91,7 +97,7 @@ class AuthService {
         return otp_code
     }
 
-    async verifyOTP(app: FastifyInstance, params: { code: string; email: string }) {
+    public async verifyOTP(app: FastifyInstance, params: { code: string; email: string }) {
         const key = `otp:${params.email}`
         const otp = await app.redis.get(key)
         if (otp && otp === params.code) {
@@ -102,4 +108,4 @@ class AuthService {
     }
 }
 
-export default new AuthService()
+export default AuthService

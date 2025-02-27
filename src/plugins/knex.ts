@@ -5,32 +5,40 @@ import knex, { type Knex } from "knex"
 declare module "fastify" {
     interface FastifyInstance {
         knex: Knex
+    }
+}
+
+declare module "knex" {
+    interface Knex {
         pgerr: { unique: string }
         paginate: PaginateFn
     }
 }
 
-function fastifyKnex(fastify: FastifyInstance, opts: Knex.Config, next: (err?: Error) => void) {
-    try {
-        if (!fastify.knex) {
-            const handler = knex(opts)
-            fastify.decorate("knex", handler)
+async function fastifyKnex(fastify: FastifyInstance, opts: Knex.Config) {
+    if (!fastify.knex) {
+        const pgInstance = knex(opts)
 
-            fastify.addHook("onClose", (instance, done: (err?: Error) => void) => {
-                if (instance.knex === handler) {
-                    instance.knex.destroy(done)
-                }
-            })
-        }
+        const ping = await pgInstance.raw("SELECT current_timestamp - pg_postmaster_start_time() AS uptime;")
+        fastify.log.info({ uptime: ping.rows[0].uptime }, "db: successfully connected, uptime ==>")
 
-        fastify.decorate("pgerr", Object.freeze(pgErrCodes))
-        fastify.decorate("paginate", paginate(fastify.knex))
+        // Extend the Knex instance with our custom properties.
+        pgInstance.pgerr = Object.freeze(pgErrCodes)
+        pgInstance.paginate = paginate(pgInstance)
 
-        next()
-    } catch (err) {
-        next(err as Error)
+        fastify.decorate("knex", pgInstance)
+
+        fastify.addHook("onClose", (app, done: (err?: Error) => void) => {
+            if (app.knex === pgInstance) {
+                app.knex.destroy(done)
+            }
+        })
     }
 }
+
+const pgErrCodes = {
+    unique: "23505",
+} as const
 
 /**
  * Pagination function.
@@ -99,10 +107,6 @@ const paginate =
 
         return pagination
     }
-
-const pgErrCodes = {
-    unique: "23505",
-}
 
 export default fp(fastifyKnex, {
     fastify: ">=5.0.0",

@@ -1,107 +1,117 @@
+import { Type } from "@sinclair/typebox"
 import type { FastifySchema } from "fastify"
-
-import { type Static, Type } from "@sinclair/typebox"
 import { replyObj } from "../../config/schema.js"
 
-export const userBody = Type.Object({
-    id: Type.Number(),
-    email: Type.String(),
-    email_verified: Type.Boolean(),
-    role: Type.Union([Type.Literal("customer"), Type.Literal("admin"), Type.Literal("manager")]),
-    created_at: Type.String({ format: "date" }),
-    updated_at: Type.String({ format: "date" }),
-})
-export type User = Static<typeof userBody>
+/* ---------------------------------------------
+    Reusable Definitions
+--------------------------------------------- */
+const Email = Type.String({ minLength: 6, maxLength: 100, format: "email" })
+const CaptchaToken = Type.String({ minLength: 1 })
+const Role = Type.Union([Type.Literal("customer"), Type.Literal("admin"), Type.Literal("manager")])
 
-export const userLoginBody = Type.Object({
-    email: Type.String({ minLength: 6, maxLength: 100, format: "email" }),
-    password: Type.String(),
-    captchaToken: Type.String({ minLength: 1 }),
-})
-export type UserLogin = Static<typeof userLoginBody>
+/* ---------------------------------------------
+    Data Schemas
+--------------------------------------------- */
+export namespace Data {
+    export const userBody = Type.Object({
+        id: Type.Number(),
+        email: Email, // original user email schema (less strict)
+        email_verified: Type.Boolean(),
+        role: Role,
+        created_at: Type.String({ format: "date" }),
+        updated_at: Type.String({ format: "date" }),
+    })
+    /* ---------------------------------------------
+        Request Body Schemas
+    --------------------------------------------- */
+    export const userLoginBody = Type.Object({
+        email: Email,
+        password: Type.String(),
+        captchaToken: CaptchaToken,
+    })
 
-export const resetPasswordBody = Type.Object({
-    email: Type.String({ minLength: 6, maxLength: 100, format: "email" }),
-    password: Type.String(),
-    code: Type.String({ minLength: 5, maxLength: 6 }),
-    captchaToken: Type.String({ minLength: 1 }),
-})
-export type ResetPassword = Static<typeof resetPasswordBody>
+    export const resetPasswordBody = Type.Object({
+        email: Email,
+        password: Type.String(),
+        code: Type.String({ minLength: 5, maxLength: 6 }),
+        captchaToken: CaptchaToken,
+    })
 
-export const verifyEmailBody = Type.Object({
-    code: Type.String({ minLength: 5, maxLength: 6 }),
-    captchaToken: Type.String({ minLength: 1 }),
-})
-export type VerifyEmail = Static<typeof verifyEmailBody>
+    export const verifyEmailBody = Type.Object({
+        code: Type.String({ minLength: 5, maxLength: 6 }),
+        captchaToken: CaptchaToken,
+    })
 
-export const reqOTPBody = Type.Object({
-    email: Type.String({ minLength: 6, maxLength: 100, format: "email" }),
-    captchaToken: Type.String({ minLength: 1 }),
-})
-export type ReqOTPBody = Static<typeof reqOTPBody>
+    export const reqOTPBody = Type.Object({
+        email: Email,
+        captchaToken: CaptchaToken,
+    })
 
-export const tokenBody = Type.Object({
-    token: Type.String(),
-})
-export type TokenBody = Static<typeof tokenBody>
-
-/**
- * * POST /v1/auth/login
- */
-const loginSchema: FastifySchema = {
-    description: "Login existing user",
-    tags: ["auth"],
-    body: userLoginBody,
-    response: { 200: replyObj(null) },
+    export const tokenBody = Type.Object({
+        token: Type.String(),
+    })
 }
 
-const registerSchema: FastifySchema = {
-    description: "Register new user",
-    tags: ["auth"],
-    body: userLoginBody,
-    response: { 201: replyObj(null) },
-}
-/**
- * * GET /v1/auth/me
- */
-const meSchema: FastifySchema = {
-    description: "Fetch user information",
-    tags: ["auth"],
-    response: { 200: replyObj(userBody) },
-}
-/**
- * * GET /v1/auth/me
- */
-const requestOTPSchema: FastifySchema = {
-    description: "Request One Time Password (OTP) for user",
-    tags: ["auth"],
-    body: reqOTPBody,
-    response: { 200: replyObj(null) },
-}
-/**
- * * POST /v1/auth/verify-email
- */
-const verifyEmailSchema: FastifySchema = {
-    description: "Verify user email",
-    tags: ["auth"],
-    body: verifyEmailBody,
-    response: { 201: replyObj(tokenBody) },
-}
-/**
- * * POST /v1/auth/reset-password
- */
-const resetPasswordSchema: FastifySchema = {
-    description: "Reset user password",
-    tags: ["auth"],
-    body: resetPasswordBody,
-    response: { 201: replyObj(tokenBody) },
-}
+/* ---------------------------------------------
+    Fastify Route Schemas
+--------------------------------------------- */
+export namespace RouteSchema {
+    /**
+     * * POST /v1/auth/login
+     */
+    export const login: FastifySchema = {
+        description: "Login existing user",
+        tags: ["auth"],
+        body: Data.userLoginBody,
+        response: { 200: replyObj(null) },
+    }
 
-export default {
-    loginSchema,
-    registerSchema,
-    meSchema,
-    requestOTPSchema,
-    verifyEmailSchema,
-    resetPasswordSchema,
+    /**
+     * * POST /v1/auth/register
+     */
+    export const register: FastifySchema = {
+        description: "Register new user",
+        tags: ["auth"],
+        body: Data.userLoginBody,
+        response: { 201: replyObj(null) },
+    }
+
+    /**
+     * * GET /v1/auth/me
+     */
+    export const me: FastifySchema = {
+        description: "Fetch user information",
+        tags: ["auth"],
+        response: { 200: replyObj(Data.userBody) },
+    }
+
+    /**
+     * * POST /v1/auth/otp-code
+     */
+    export const requestOTP: FastifySchema = {
+        description: "Request One Time Password (OTP) for user",
+        tags: ["auth"],
+        body: Data.reqOTPBody,
+        response: { 200: replyObj(null) },
+    }
+
+    /**
+     * * POST /v1/auth/verify-email
+     */
+    export const verifyEmail: FastifySchema = {
+        description: "Verify user email",
+        tags: ["auth"],
+        body: Data.verifyEmailBody,
+        response: { 201: replyObj(Data.tokenBody) },
+    }
+
+    /**
+     * * POST /v1/auth/reset-password
+     */
+    export const resetPassword: FastifySchema = {
+        description: "Reset user password",
+        tags: ["auth"],
+        body: Data.resetPasswordBody,
+        response: { 201: replyObj(Data.tokenBody) },
+    }
 }

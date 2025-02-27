@@ -1,55 +1,59 @@
 import type { FastifyInstance, FastifyPluginAsync, FastifyPluginOptions } from "fastify"
 import bcrypt from "../../plugins/bcrypt.js"
-
-import auth from "./handler.js"
-
-import schema from "./schema.js"
+import AuthHandler from "./handler.js"
+import AuthRepository from "./repository.js"
+import { RouteSchema } from "./schema.js"
+import AuthService from "./service.js"
 
 const routes: FastifyPluginAsync = async (app: FastifyInstance, opts: FastifyPluginOptions) => {
     app.register(bcrypt, { saltWorkFactor: 10 })
 
+    const repo = new AuthRepository(app.knex)
+    const svc = new AuthService(repo)
+    const authHandler = new AuthHandler(app, svc, repo)
+
     app.route({
         method: "POST",
         url: "/register",
-        schema: schema.registerSchema,
-        handler: auth.register,
+        schema: RouteSchema.register,
+        handler: authHandler.register,
     })
 
     app.route({
         method: "POST",
         url: "/login",
-        schema: schema.loginSchema,
-        handler: auth.login,
+        schema: RouteSchema.login,
+        handler: authHandler.login,
     })
 
     app.route({
         method: "GET",
         url: "/me",
         onRequest: app.authenticate,
-        schema: schema.meSchema,
-        handler: auth.me,
+        schema: RouteSchema.me,
+        handler: authHandler.me,
     })
 
     app.route({
         method: "POST",
         url: "/otp-code",
-        schema: schema.requestOTPSchema,
-        handler: auth.requestOTP,
+        schema: RouteSchema.requestOTP,
+        handler: authHandler.requestOTP,
     })
 
     app.route({
         method: "POST",
         url: "/verify-email",
         onRequest: app.authenticate,
-        schema: schema.verifyEmailSchema,
-        handler: auth.verifyEmail,
+        schema: RouteSchema.verifyEmail,
+        handler: authHandler.verifyEmail,
     })
 
     app.route({
         method: "POST",
         url: "/reset-password",
-        schema: schema.resetPasswordSchema,
-        handler: auth.resetPassword,
+        schema: RouteSchema.resetPassword,
+        handler: authHandler.resetPassword,
     })
 }
 
