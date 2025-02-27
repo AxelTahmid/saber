@@ -1,6 +1,5 @@
 import dotenv from "dotenv"
 import type { Knex } from "knex"
-import path from "node:path"
 
 dotenv.config({ path: "../../.env" })
 
@@ -35,10 +34,12 @@ const config: Conf = {
         },
         migrations: {
             tableName: "knex_migrations",
-            directory: path.resolve(__dirname, "src", "database", "migrations"),
+            directory: "migrations",
+            // directory: path.resolve(path.dirname(__filename), "src", "database", "migrations"),
         },
         seeds: {
-            directory: path.resolve(__dirname, "src", "database", "seeds"),
+            directory: "seeds",
+            // directory: path.resolve(path.dirname(__filename), "src", "database", "seeds"),
         },
         asyncStackTraces: true,
         debug: true,

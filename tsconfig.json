@@ -46,5 +46,15 @@
             "@fastify/sensible",
             "@fastify/under-pressure"
         ]
-    }
+    },
+    // for knex cli migrations
+    // "ts-node": {
+    //     "experimentalSpecifierResolution": "node",
+    //     "require": ["dotenv/config"],
+    //     "typeCheck": false,
+    //     "files": true,
+    //     "esm": true,
+    //     "swc": true,
+    //     "ignore": ["(?:^|/)node_modules/", "(?:^|/)\\.next/", ".yarn/*"]
+    // }
 }

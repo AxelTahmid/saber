@@ -5,7 +5,7 @@
 	"main": "server.js",
 	"type": "module",
 	"author": "AxelTahmid",
-	"license": "MIT",
+	"license": "Apache 2.0",
 	"engines": {
 		"npm": ">=11.0.0",
 		"node": ">=22.14.0"
@@ -15,11 +15,13 @@
 		"build": "tsc -p tsconfig.json",
 		"start": "tsx src/server.ts",
 		"dev": "tsx watch src/server.ts",
-		"migrate": "knex migrate:latest --knexfile=./src/database/knexfile --verbose",
-		"migrate-create": "knex migrate:make --knexfile=./src/database/knexfile --verbose",
-		"seed": "knex seed:run --knexfile=./src/database/knexfile --verbose",
-		"seed-create": "knex seed:make --knexfile=./src/database/knexfile --verbose",
-		"rollback": "knex migrate:rollback --knexfile=./src/database/knexfile --verbose",
+		"knx": "NODE_OPTIONS='--import tsx/esm' knex",
+		"knex": "tsx ./node_modules/knex/bin/cli.js --knexfile=./src/database/knexfile",
+		"migrate": "yarn knex -- migrate:latest --verbose",
+		"migrate-create": "yarn knex -- migrate:make --verbose",
+		"seed": "yarn knex -- seed:run --verbose",
+		"seed-create": "yarn knex -- seed:make --verbose",
+		"rollback": "yarn knex -- migrate:rollback --verbose",
 		"lint-fix": "yarn dlx @biomejs/biome check --apply .",
 		"lint-check": "yarn dlx @biomejs/biome check .",
 		"deps": "yarn upgrade-interactive"
@@ -53,7 +55,6 @@
 		"@types/nodemailer": "^6.4.17",
 		"@types/pg": "^8.11.11",
 		"pino-pretty": "^13.0.0",
-		"ts-node": "^10.9.2",
 		"tsx": "^4.19.3",
 		"typescript": "^5.7.3"
 	}

@@ -84,6 +84,7 @@ log-db:
 # ----------------------------------------------------------------------
 # Database Scripts
 # ----------------------------------------------------------------------
+knex := npx tsx ./node_modules/knex/bin/cli.js --knexfile="$(PWD)/src/database/knexfile"
 
 db-refresh:
 	@GRAY="\033[1;36m"; \
@@ -99,13 +100,13 @@ db-refresh:
 	echo -e "$$GREEN*************************************************"; \
 	echo -e "*  Rolling Back Migrations if Exists           *"; \
 	echo -e "*************************************************$$NC"; \
-	npx knex migrate:rollback --all --knexfile "$(PWD)/database/knexfile" --verbose; \
+	$(knex) migrate:rollback --all --verbose; \
 	echo -e "$$GREEN*************************************************"; \
 	echo -e "*  Migrating Tables                            *"; \
 	echo -e "*************************************************$$NC"; \
-	npx knex migrate:latest --knexfile "$(PWD)/database/knexfile" --verbose; \
+	$(knex) migrate:latest --verbose; \
 	echo -e "$$GREEN*************************************************"; \
 	echo -e "*  Seeding Tables                              *"; \
 	echo -e "*************************************************$$NC"; \
-	npx knex seed:run --knexfile "$(PWD)/database/knexfile" --verbose
+	$(knex) seed:run --verbose
 

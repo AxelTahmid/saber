@@ -5,7 +5,7 @@ import type { Knex } from "knex"
  * @returns { Promise<void> }
  * * npx knex seed:run --specific=users_table_data.js
  */
-export default async function seed(knex: Knex): Promise<void> {
+export async function seed(knex: Knex): Promise<void> {
     // pass is 123456
     await knex("auth_users").insert([
         {

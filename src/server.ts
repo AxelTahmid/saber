@@ -1,7 +1,6 @@
 import "dotenv/config"
-import { fileURLToPath } from "node:url"
 import { readFileSync } from "node:fs"
-import { join, dirname } from "node:path"
+import { join } from "node:path"
 
 import fastify from "fastify"
 import fastifyCors from "@fastify/cors"
