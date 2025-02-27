@@ -1,4 +1,5 @@
 import type { FastifyReply, FastifyRequest } from "fastify"
+import type { QueueBody } from "./schema.js"
 
 const base = async function (request: FastifyRequest, reply: FastifyReply) {
     const status = this.memoryUsage()
@@ -46,7 +47,7 @@ const flushRedis = async function (request: FastifyRequest, reply: FastifyReply)
     }
 }
 
-const queueAction = async function (request: FastifyRequest, reply: FastifyReply) {
+const queueAction = async function (request: FastifyRequest<{ Body: QueueBody }>, reply: FastifyReply) {
     const action = request.body?.action
 
     switch (action) {

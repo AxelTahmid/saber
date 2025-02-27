@@ -16,12 +16,12 @@
 		"start": "tsx src/server.ts",
 		"dev": "tsx watch src/server.ts",
 		"migrate": "knex migrate:latest --knexfile=./src/database/knexfile --verbose",
+		"migrate-create": "knex migrate:make --knexfile=./src/database/knexfile",
 		"seed": "knex seed:run --knexfile=./src/database/knexfile --verbose",
+		"seed-create": "knex seed:make --knexfile=./src/database/knexfile",
 		"rollback": "knex migrate:rollback --knexfile=./src/database/knexfile --verbose",
-		"make:seeder": "knex seed:make --knexfile=./src/database/knexfile",
-		"make:migration": "knex migrate:make --knexfile=./src/database/knexfile",
-		"fix": "yarn dlx @biomejs/biome check --apply .",
-		"check": "yarn dlx @biomejs/biome check .",
+		"lint-fix": "yarn dlx @biomejs/biome check --apply .",
+		"lint-check": "yarn dlx @biomejs/biome check .",
 		"deps": "yarn upgrade-interactive"
 	},
 	"dependencies": {

@@ -27,26 +27,28 @@ process.setMaxListeners(20)
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 
+const logconf = {
+    target: "pino-pretty",
+    options: {
+        translateTime: "HH:MM:ss Z",
+        ignore: "pid,hostname",
+    },
+} as const
+
 // Create the Fastify instance with HTTPS support
 const app = fastify({
-    trustProxy: true,
+    trustProxy: "127.0.0.1,192.168.1.1/24",
     http2: true,
     https: {
         allowHTTP1: true,
         key: readFileSync(join(__dirname, "..", "certs", "tls.key")),
         cert: readFileSync(join(__dirname, "..", "certs", "tls.crt")),
     },
-    requestTimeout: 120000,
+    requestTimeout: 30000, // 30 seconds
+    keepAliveTimeout: 60000, // 60 seconds
+    bodyLimit: 1048576, // 1 MiB
     logger: {
-        transport: conf.isDevEnvironment
-            ? {
-                  target: "pino-pretty",
-                  options: {
-                      translateTime: "HH:MM:ss Z",
-                      ignore: "pid,hostname",
-                  },
-              }
-            : undefined,
+        transport: conf.isDevEnvironment ? logconf : undefined,
     },
 }).withTypeProvider<TypeBoxTypeProvider>()
 

@@ -4,7 +4,9 @@
  */
 import { DeleteObjectCommand, DeleteObjectsCommand, ListObjectsCommand, PutObjectCommand } from "@aws-sdk/client-s3"
 
-import { storage } from "../../config/environment.js"
+import conf from "../../config/environment.js"
+import type { FastifyReply, FastifyRequest } from "fastify"
+import type { DestroyMany } from "./schema.js"
 /**
  * * Handler GET /v1/gallery/flush
  */
@@ -26,10 +28,10 @@ const gallery = async function (request: FastifyRequest, reply: FastifyReply) {
     let data = await this.cache.get(key)
 
     if (!data) {
-        data = await this.s3.send(new ListObjectsCommand({ Bucket: storage.bucket }))
+        data = await this.s3.send(new ListObjectsCommand({ Bucket: conf.storage.bucket }))
 
-        data.Contents.forEach((_) => {
-            _.Url = `${storage.connection.endpoint}/${storage.bucket}/${_.Key}`
+        data.Contents.forEach((c: any) => {
+            c.Url = `${conf.storage.connection.endpoint}/${conf.storage.bucket}/${c.Key}`
         })
         await this.cache.set(key, data)
     }
@@ -49,7 +51,7 @@ const upload = async function (request: FastifyRequest, reply: FastifyReply) {
     const { Key } = request.query
 
     const data = await request.file()
-    const buffer = await data.toBuffer()
+    const buffer = await data?.toBuffer()
 
     const allowedMimes = ["image/png", "image/jpg", "image/jpeg", "image/webp", "image/svg+xml"]
 
@@ -58,7 +60,7 @@ const upload = async function (request: FastifyRequest, reply: FastifyReply) {
     }
 
     const uploadParams = {
-        Bucket: storage.bucket,
+        Bucket: conf.storage.bucket,
         Key,
         CacheControl: "public,max-age=2628000,s-maxage=2628000",
         Body: buffer,
@@ -77,10 +79,10 @@ const upload = async function (request: FastifyRequest, reply: FastifyReply) {
 /**
  * * Handler DELETE /v1/gallery/:key
  */
-const destroy = async function (request: FastifyRequest, reply: FastifyReply) {
+const destroy = async function (request: FastifyRequest<{ Body: DestroyMany }>, reply: FastifyReply) {
     const { Key } = request.query
 
-    await this.s3.send(new DeleteObjectCommand({ Bucket: storage.bucket, Key }))
+    await this.s3.send(new DeleteObjectCommand({ Bucket: conf.storage.bucket, Key }))
     await this.cache.flush("gallery:list")
 
     reply.code(201)
@@ -96,7 +98,7 @@ const destroy = async function (request: FastifyRequest, reply: FastifyReply) {
 const destroyMany = async function (request: FastifyRequest, reply: FastifyReply) {
     await this.s3.send(
         new DeleteObjectsCommand({
-            Bucket: storage.bucket,
+            Bucket: conf.storage.bucket,
             Delete: request.body,
         }),
     )

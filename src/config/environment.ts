@@ -1,5 +1,5 @@
 import "dotenv/config"
-import type { FastifyInstance, FastifyRequest } from "fastify"
+import type { FastifyInstance } from "fastify"
 import { Redis, type RedisOptions } from "ioredis"
 import type { Knex } from "knex"
 import type { S3ClientConfig } from "@aws-sdk/client-s3"

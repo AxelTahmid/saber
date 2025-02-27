@@ -2,7 +2,7 @@ import type { FastifyInstance, FastifyReply, FastifyRequest } from "fastify"
 
 import svc from "@auth/service.js"
 import repo from "@auth/repository.js"
-import type { ReqOTPBody, ResetPassword, UserLogin, VerifyEmail } from "@auth/schemas.js"
+import type { ReqOTPBody, ResetPassword, UserLogin, VerifyEmail } from "@app/auth/schema.js"
 
 /**
  * * POST /v1/auth/login

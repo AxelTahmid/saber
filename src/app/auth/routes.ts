@@ -1,9 +1,9 @@
 import type { FastifyInstance, FastifyPluginAsync, FastifyPluginOptions } from "fastify"
 import bcrypt from "../../plugins/bcrypt.js"
 
-import auth from "./handlers.js"
+import auth from "./handler.js"
 
-import s from "./schemas.js"
+import schema from "./schema.js"
 
 const routes: FastifyPluginAsync = async (app: FastifyInstance, opts: FastifyPluginOptions) => {
     app.register(bcrypt, { saltWorkFactor: 10 })
@@ -11,14 +11,14 @@ const routes: FastifyPluginAsync = async (app: FastifyInstance, opts: FastifyPlu
     app.route({
         method: "POST",
         url: "/register",
-        schema: s.registerSchema,
+        schema: schema.registerSchema,
         handler: auth.register,
     })
 
     app.route({
         method: "POST",
         url: "/login",
-        schema: s.loginSchema,
+        schema: schema.loginSchema,
         handler: auth.login,
     })
 
@@ -26,14 +26,14 @@ const routes: FastifyPluginAsync = async (app: FastifyInstance, opts: FastifyPlu
         method: "GET",
         url: "/me",
         onRequest: app.authenticate,
-        schema: s.meSchema,
+        schema: schema.meSchema,
         handler: auth.me,
     })
 
     app.route({
         method: "POST",
         url: "/otp-code",
-        schema: s.requestOTPSchema,
+        schema: schema.requestOTPSchema,
         handler: auth.requestOTP,
     })
 
@@ -41,14 +41,14 @@ const routes: FastifyPluginAsync = async (app: FastifyInstance, opts: FastifyPlu
         method: "POST",
         url: "/verify-email",
         onRequest: app.authenticate,
-        schema: s.verifyEmailSchema,
+        schema: schema.verifyEmailSchema,
         handler: auth.verifyEmail,
     })
 
     app.route({
         method: "POST",
         url: "/reset-password",
-        schema: s.resetPasswordSchema,
+        schema: schema.resetPasswordSchema,
         handler: auth.resetPassword,
     })
 }

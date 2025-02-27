@@ -1,4 +1,4 @@
-import { Type } from "@sinclair/typebox"
+import { type Static, Type } from "@sinclair/typebox"
 import { replyObj } from "../../config/schema.js"
 
 // In Fluent JSON Schema, none of the properties in baseResponse were marked as required,
@@ -22,6 +22,7 @@ export const baseResponse = Type.Object({
 export const queueBody = Type.Object({
     action: Type.Union([Type.Literal("drain"), Type.Literal("clean"), Type.Literal("obliterate")]),
 })
+export type QueueBody = Static<typeof queueBody>
 
 /**
  * * Schema GET /

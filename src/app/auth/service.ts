@@ -3,7 +3,7 @@ import { ofetch } from "ofetch"
 
 import conf from "../../config/environment.js"
 import repo from "./repository.js"
-import type { ResetPassword, User, UserLogin } from "./schemas.js"
+import type { ResetPassword, User, UserLogin } from "./schema.js"
 
 class AuthService {
     async verifyCaptcha(app: FastifyInstance, token: string) {

@@ -1,5 +1,5 @@
 import type { FastifyInstance, FastifyPluginAsync, FastifyPluginOptions } from "fastify"
-import helper from "./handlers.js"
+import handler from "./handlers.js"
 import schema from "./schema.js"
 
 const routes: FastifyPluginAsync = async (app: FastifyInstance, opts: FastifyPluginOptions) => {
@@ -7,7 +7,7 @@ const routes: FastifyPluginAsync = async (app: FastifyInstance, opts: FastifyPlu
         method: "GET",
         url: "/",
         schema: schema.base,
-        handler: helper.base,
+        handler: handler.base,
     })
 
     app.route({
@@ -15,14 +15,14 @@ const routes: FastifyPluginAsync = async (app: FastifyInstance, opts: FastifyPlu
         url: "/otp",
         onRequest: app.role.restricted,
         schema: schema.arrayofString,
-        handler: helper.otpKeys,
+        handler: handler.otpKeys,
     })
 
     app.route({
         method: "POST",
         url: "/redis",
         onRequest: app.role.restricted,
-        handler: helper.redisData,
+        handler: handler.redisData,
     })
 
     app.route({
@@ -30,14 +30,14 @@ const routes: FastifyPluginAsync = async (app: FastifyInstance, opts: FastifyPlu
         url: "/queue",
         onRequest: app.role.restricted,
         schema: schema.queueAction,
-        handler: helper.queueAction,
+        handler: handler.queueAction,
     })
 
     app.route({
         method: "POST",
         url: "/flush",
         onRequest: app.role.restricted,
-        handler: helper.flushRedis,
+        handler: handler.flushRedis,
     })
 }
 

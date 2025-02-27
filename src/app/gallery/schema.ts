@@ -1,20 +1,28 @@
-import { S } from "fluent-json-schema"
-
+import { type Static, Type } from "@sinclair/typebox"
 import { replyObj } from "../../config/schema.js"
 
-const contentObj = S.object()
-    .prop("Key", S.string())
-    .prop("LastModified", S.string().format("date"))
-    .prop("ETag", S.string())
-    .prop("Size", S.number())
-    .prop("Url", S.string())
+const contentObj = Type.Object({
+    Key: Type.Optional(Type.String()),
+    LastModified: Type.Optional(Type.String({ format: "date" })),
+    ETag: Type.Optional(Type.String()),
+    Size: Type.Optional(Type.Number()),
+    Url: Type.Optional(Type.String()),
+})
 
-const galleryResponseObj = S.object()
-    .prop("Prefix", S.string())
-    .prop("Name", S.string())
-    .prop("IsTruncated", S.boolean())
-    .prop("Contents", S.array().items(contentObj))
+const galleryResponseObj = Type.Object({
+    Prefix: Type.Optional(Type.String()),
+    Name: Type.Optional(Type.String()),
+    IsTruncated: Type.Optional(Type.Boolean()),
+    Contents: Type.Optional(Type.Array(contentObj)),
+})
 
+const KeyQueryParam = Type.Object({ Key: Type.String() })
+
+const destroyManyBody = Type.Object({
+    Objects: Type.Optional(Type.Array(Type.Object({ Key: Type.String() }))),
+})
+
+export type DestroyMany = Static<typeof destroyManyBody>
 /**
  * * Schema GET /v1/gallery/
  */
@@ -25,26 +33,26 @@ const gallery = {
  * * Schema POST /v1/gallery/upload
  */
 const upload = {
-    query: S.object().prop("Key", S.string().required()),
-    response: { 201: replyObj() },
+    query: KeyQueryParam,
+    response: { 201: replyObj(null) },
 }
 /**
  * * Schema DELETE /v1/gallery/?Key=keyname
  */
 const destroy = {
-    query: S.object().prop("Key", S.string().required()),
-    response: { 201: replyObj() },
+    query: KeyQueryParam,
+    response: { 201: replyObj(null) },
 }
 /**
  * * Schema DELETE /v1/gallery/selected
  */
 const destroyMany = {
-    body: S.object().prop("Objects", S.array().items(S.object().prop("Key", S.string().required()))),
-    response: { 201: replyObj() },
+    body: destroyManyBody,
+    response: { 201: replyObj(null) },
 }
 
 const flush = {
-    response: { 200: replyObj() },
+    response: { 200: replyObj(null) },
 }
 
 export default {
