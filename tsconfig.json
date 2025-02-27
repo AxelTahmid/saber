@@ -47,5 +47,9 @@
             "@fastify/under-pressure",
             "openapi-types"
         ]
+    },
+    "watchOptions": {
+        "watchFile": "dynamicPriorityPolling"
+        // "fallbackPolling": "fixedinterval"
     }
 }

@@ -4,9 +4,9 @@ FROM node:22-slim AS base
 FROM base AS dev
 WORKDIR /app
 # RUN npm install -g node-gyp
-# COPY .yarn ./.yarn
-# COPY [".yarnrc.yml", "package.json", "yarn.lock", "./"]
-COPY . .
+COPY .yarn ./.yarn
+COPY [".yarnrc.yml", "package.json", "yarn.lock", "./"]
+# COPY . .
 RUN yarn install
 CMD ["yarn", "dev"]
 
