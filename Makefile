@@ -63,7 +63,7 @@ init:
 	tls
 	jwt
 	yarn install
-	lefthook install
+	npx lefthook install
 	docker compose down --remove-orphans
 	docker compose build --no-cache
 	docker compose up -d --build -V
