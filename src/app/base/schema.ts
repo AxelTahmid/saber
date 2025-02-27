@@ -36,7 +36,7 @@ export namespace RouteSchema {
     export const base: FastifySchema = {
         description: "Health status of application",
         tags: ["base"],
-        response: { 200: replyObj(Data.baseResponse) },
+        response: { 200: Data.baseResponse },
     }
 
     /**

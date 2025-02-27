@@ -9,7 +9,7 @@ const routes: FastifyPluginAsync = async (app: FastifyInstance, opts: FastifyPlu
     app.register(bcrypt, { saltWorkFactor: 10 })
 
     const repo = new AuthRepository(app.knex)
-    const svc = new AuthService(repo)
+    const svc = new AuthService(app, repo)
     const authHandler = new AuthHandler(app, svc, repo)
 
     app.route({

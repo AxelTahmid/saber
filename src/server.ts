@@ -7,13 +7,13 @@ import type { TypeBoxTypeProvider } from "@fastify/type-provider-typebox"
 import closeWithGrace from "close-with-grace"
 import fastify, { type FastifyInstance } from "fastify"
 
-import routes from "@app/routes.js"
 import conf from "@config/environment.js"
 import knexfile from "@database/knexfile.js"
 import bullMQ from "@plugins/bullMQ.js"
 import jwt from "@plugins/jwt.js"
 import knex from "@plugins/knex.js"
 import redis from "@plugins/redis.js"
+import routes from "routes.js"
 
 // Global error handlers for additional safety
 process.on("uncaughtException", (error) => {
