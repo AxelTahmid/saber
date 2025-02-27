@@ -2,9 +2,9 @@ import conf from "@config/environment.js"
 import fastifyMultipart from "@fastify/multipart"
 import type { FastifyInstance, FastifyPluginAsync, FastifyPluginOptions } from "fastify"
 
-import handler from "@gallery/handlers.js"
-import schema from "@gallery/schema.js"
 import s3object from "@plugins/s3object.js"
+import GalleryHandler from "./handlers.js"
+import { RouteSchema } from "./schema.js"
 
 const routes: FastifyPluginAsync = async (app: FastifyInstance, opts: FastifyPluginOptions) => {
     app.register(fastifyMultipart, conf.storage.multer)
@@ -17,43 +17,45 @@ const routes: FastifyPluginAsync = async (app: FastifyInstance, opts: FastifyPlu
 
     app.register(s3object, s3credentials)
 
+    const galleryHandler = new GalleryHandler(app)
+
     app.route({
         method: "GET",
         url: "/",
-        schema: schema.gallery,
-        handler: handler.gallery,
+        schema: RouteSchema.gallery,
+        handler: galleryHandler.gallery,
     })
 
     app.route({
         method: "PUT",
         url: "/upload",
         onRequest: app.role.restricted,
-        schema: schema.upload,
-        handler: handler.upload,
+        schema: RouteSchema.upload,
+        handler: galleryHandler.upload,
     })
 
     app.route({
         method: "POST",
         url: "/flush",
         onRequest: app.role.restricted,
-        schema: schema.flush,
-        handler: handler.flush,
+        schema: RouteSchema.flush,
+        handler: galleryHandler.flush,
     })
 
     app.route({
         method: "DELETE",
         url: "/selected",
         onRequest: app.role.restricted,
-        schema: schema.destroyMany,
-        handler: handler.destroyMany,
+        schema: RouteSchema.destroyMany,
+        handler: galleryHandler.destroyMany,
     })
 
     app.route({
         method: "DELETE",
         url: "/",
         onRequest: app.role.restricted,
-        schema: schema.destroy,
-        handler: handler.destroy,
+        schema: RouteSchema.destroy,
+        handler: galleryHandler.destroy,
     })
 }
 
