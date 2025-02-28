@@ -60,6 +60,7 @@ fresh:
 
 init:
 	check-env
+	mkdir certs
 	tls
 	jwt
 	yarn install
