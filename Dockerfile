@@ -29,4 +29,5 @@ FROM gcr.io/distroless/nodejs22-debian12 AS prod
 WORKDIR /app
 COPY --from=build /app/dist/ ./
 COPY --from=deps /app/node_modules ./node_modules
-CMD ["server.js"]
+# use 70-75% of you container runtime as limit for memory
+CMD ["node", "--max-old-space-size=512", "server.js"]
